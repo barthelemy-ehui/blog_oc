@@ -1,0 +1,19 @@
+{
+    "autoload" : {
+      "psr-4": {
+        "App\\": "app"
+      },
+        "files": [
+            "app/router.php"
+        ]
+    },
+    "require": {
+        "twig/twig": "2"
+    },
+    "authors": [
+        {
+            "name": "Barthelemy",
+            "email": "barthelemy.ehui@gmail.com"
+        }
+    ]
+}
