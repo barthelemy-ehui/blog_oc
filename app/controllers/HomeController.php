@@ -12,7 +12,6 @@ class HomeController
     
     public function index($data)
     {
-        var_dump($data);
         echo 'index';
     }
     

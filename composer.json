@@ -1,0 +1,22 @@
+{
+    "name": "bart/blog",
+    "description": "blog openclassrooms project",
+    "license": "proprietary",
+    "authors": [
+      {
+        "name": "Barthelemy",
+        "email": "barthelemy.ehui@gmail.com"
+      }
+    ],
+    "autoload": {
+      "psr-4": {
+        "App\\": "app"
+      },
+        "files": [
+            "app/routes/router.php"
+        ]
+    },
+    "require": {
+        "twig/twig": "2"
+    }
+}
