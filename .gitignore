@@ -1,0 +1,6 @@
+ Created by .ignore support plugin (hsz.mobi)
+/vendor/
+.php_cs.cache
+/config/DbConfig.php
+*/Icon
+cache
