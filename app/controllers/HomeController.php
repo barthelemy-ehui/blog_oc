@@ -19,4 +19,8 @@ class HomeController
     public function show(){
         echo 'show';
     }
+    
+    public function inscription($name){
+        var_dump($name);
+    }
 }
