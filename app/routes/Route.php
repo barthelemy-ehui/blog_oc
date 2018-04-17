@@ -36,8 +36,8 @@ class Route
     
     private static function checkPathInfo($routeUrl, $http_method)
     {
-        if(isset($_SERVER['PATH_INFO'])) {
-            $clientUrl = $_SERVER['PATH_INFO'];
+        if(isset($_SERVER['REQUEST_URI'])) {
+            $clientUrl = $_SERVER['REQUEST_URI'];
             $routeUrlReplaced = preg_replace('/\/?\{[[:alnum:]]+\}\/?/','',$routeUrl);
             return strpos($clientUrl,$routeUrlReplaced) !== false
                 &&
@@ -65,7 +65,7 @@ class Route
         
 
         $routeUrlExplode = explode('/', $uri);
-        $clientUrlExplode = explode('/', $_SERVER['PATH_INFO']);
+        $clientUrlExplode = explode('/', $_SERVER['REQUEST_URI']);
         $urlUserData = array_values(array_diff($clientUrlExplode,$routeUrlExplode));
         
         $uriNameWithValue = [];
@@ -115,7 +115,7 @@ class Route
     
     private static function getUserClientMethod($uri)
     {
-        $userClientUrl = $_SERVER['PATH_INFO'];
+        $userClientUrl = $_SERVER['REQUEST_URI'];
         
         $patternIndex = 0;
         if(strpos($userClientUrl, $uri) !== $patternIndex){
@@ -152,7 +152,7 @@ class Route
     
     private static function fetchUrlDataAll($uri)
     {
-        $userClientUrl = $_SERVER['PATH_INFO'];
+        $userClientUrl = $_SERVER['REQUEST_URI'];
         $urlClient = substr_replace($userClientUrl,'',0,strlen($uri));
         $urlValues = explode('/',$urlClient);
         
