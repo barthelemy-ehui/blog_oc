@@ -1,11 +1,14 @@
 <?php
 
+use App\Routes\RouteSingleton;
 use App\Routes\Route;
+/** @var Route $route */
+$route = RouteSingleton::getInstance();
 
+$route->get('/hello/{name}','HomeController::inscription');
+$route->all('/', 'testController');
 
-//Route::get('/hello/{name}','HomeController::inscription');
-
-Route::all('/test', 'TestController');
+//Route::all('/test', 'TestController');
 //Route::get('/inscription/{name}/{age}', 'TestController::show');
 //inscription/index
 

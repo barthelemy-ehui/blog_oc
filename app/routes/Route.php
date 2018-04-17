@@ -19,22 +19,22 @@ class Route
     ];
     const HTTP_METHOD = 'http_method';
     
-    public static function get($uri, $controller)
+    public function get($uri, $controller)
     {
-        if (static::checkPathInfo($uri, static::GET_METHOD)) {
-            $urlData = static::fetchUrlData($uri);
-            static::callController($controller,$urlData);
+        if ($this->checkPathInfo($uri, static::GET_METHOD)) {
+            $urlData = $this->fetchUrlData($uri);
+            $this->callController($controller,$urlData);
         }
     }
     
-    public static function post($uri, $controller)
+    public function post($uri, $controller)
     {
-        if (static::checkPathInfo($uri, static::POST_METHOD)) {
-            static::callController($controller);
+        if ($this->checkPathInfo($uri, static::POST_METHOD)) {
+            $this->callController($controller);
         }
     }
     
-    private static function checkPathInfo($routeUrl, $http_method)
+    private function checkPathInfo($routeUrl, $http_method)
     {
         if(isset($_SERVER['REQUEST_URI'])) {
             $clientUrl = $_SERVER['REQUEST_URI'];
@@ -46,7 +46,7 @@ class Route
         return false;
     }
     
-    private static function callController($controllerPath, $methodValue = [])
+    private  function callController($controllerPath, $methodValue = [])
     {
         list($controllerName,$method) = explode('::',$controllerPath);
         $namespacePath = 'App\\Controllers\\';
@@ -58,7 +58,7 @@ class Route
         }
     }
     
-    private static function fetchUrlData($uri)
+    private function fetchUrlData($uri)
     {
         $pattern = '/{([a-z]+)}/';
         preg_match_all($pattern, $uri, $matches);
@@ -80,10 +80,9 @@ class Route
     
     
 
-    public static function all($uri, $controllerName){
+    public function all($uri, $controllerName){
         $namespacePath = 'App\\Controllers\\';
         $controller = $namespacePath . $controllerName;
-        
         $controllerReflection = new \ReflectionClass($controller);
     
     
@@ -93,15 +92,15 @@ class Route
           return strtolower($obj->name);
         },$methods);
         
-        if(!in_array($methodName = static::getUserClientMethod($uri),$methods)){
+        if(!in_array($methodName = $this->getUserClientMethod($uri),$methods)){
             throw new UnrecognizeMethodException();
         }
         
-        $methodValue = static::fetchUrlDataAll($uri);
-        
+        $methodValue = $this->fetchUrlDataAll($uri);
+
         if( $controllerReflection->hasMethod($methodName) &&
             $controllerReflection->getMethod($methodName)->isPublic() &&
-            static::checkForHttpMethod($controllerReflection->getMethod($methodName)->getDocComment())
+            $this->checkForHttpMethod($controllerReflection->getMethod($methodName)->getDocComment())
         ){
             
             if(!empty($methodValue)){
@@ -113,7 +112,7 @@ class Route
 
     }
     
-    private static function getUserClientMethod($uri)
+    private function getUserClientMethod($uri)
     {
         $userClientUrl = $_SERVER['REQUEST_URI'];
         
@@ -133,7 +132,7 @@ class Route
         return strtolower($methodName);
     }
     
-    private static function checkForHttpMethod($getDocComments)
+    private function checkForHttpMethod($getDocComments)
     {
         $commentsWildcardStripOut = trim(preg_replace('/(\*|\/)+/','', $getDocComments));
         
@@ -150,10 +149,16 @@ class Route
         return $httpMethodAsked === $userClientHttpMethod;
     }
     
-    private static function fetchUrlDataAll($uri)
+    private function fetchUrlDataAll($uri)
     {
         $userClientUrl = $_SERVER['REQUEST_URI'];
-        $urlClient = substr_replace($userClientUrl,'',0,strlen($uri));
+
+        $defaultRouteSeparator = '/';
+        $urlClient = $userClientUrl;
+        if($uri !== $defaultRouteSeparator){
+            $urlClient = substr_replace($userClientUrl,'',0,strlen($uri));
+        }
+        
         $urlValues = explode('/',$urlClient);
         
         // because there is an empty value after explode, we don't need it, so we get rid of it
