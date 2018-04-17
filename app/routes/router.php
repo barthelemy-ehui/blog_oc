@@ -5,7 +5,6 @@ use App\Routes\Route;
 
 //Route::get('/hello/{name}','HomeController::inscription');
 
-
 Route::all('/test', 'TestController');
 //Route::get('/inscription/{name}/{age}', 'TestController::show');
 //inscription/index
