@@ -7,6 +7,11 @@
             "app/routes/router.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
     "require": {
         "twig/twig": "2"
     },
@@ -15,5 +20,8 @@
             "name": "Barthelemy",
             "email": "barthelemy.ehui@gmail.com"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    }
 }
