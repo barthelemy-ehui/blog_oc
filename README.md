@@ -16,6 +16,15 @@ The use of the http_method is declared by adding comment on the function.
 
 For instance
 
+```
 /**\
 *http_method=get\
-*/ 
+*/
+
+```
+
+**Test**
+
+The following command allow testing
+
+```phpunit --bootstrap vendor/autoload.php tests/fileName.php```
