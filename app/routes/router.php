@@ -5,8 +5,8 @@ use App\Routes\Route;
 /** @var Route $route */
 $route = RouteSingleton::getInstance();
 
-$route->get('/hello/{name}','HomeController::inscription');
-$route->all('/', 'testController');
+$route->get('/hello/{name}','HomeController::inscription')->setName('auth.hello');
+$route->all('/', 'testController')->setName('controller.alone');
 
 //Route::all('/test', 'TestController');
 //Route::get('/inscription/{name}/{age}', 'TestController::show');
