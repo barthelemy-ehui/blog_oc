@@ -19,19 +19,63 @@ class Route
     ];
     const HTTP_METHOD = 'http_method';
     
+    private $stacksOfUrls = [];
+
+    private $currentUri;
+    
     public function get($uri, $controller)
     {
+        
         if ($this->checkPathInfo($uri, static::GET_METHOD)) {
             $urlData = $this->fetchUrlData($uri);
-            $this->callController($controller,$urlData);
+            $this->callController($uri,$controller,$urlData);
         }
+        
+        return $this;
     }
     
     public function post($uri, $controller)
     {
         if ($this->checkPathInfo($uri, static::POST_METHOD)) {
-            $this->callController($controller);
+            $this->callController($uri, $controller);
         }
+        return $this;
+    }
+    
+    public function all($uri, $controllerName){
+        $namespacePath = 'App\\Controllers\\';
+        $controller = $namespacePath . $controllerName;
+        $controllerReflection = new \ReflectionClass($controller);
+        
+        
+        $methods = $controllerReflection->getMethods();
+        $methodName = '';
+        $methods = array_map(function($obj){
+            return strtolower($obj->name);
+        },$methods);
+        
+        if(!in_array($methodName = $this->getUserClientMethod($uri),$methods)){
+            throw new UnrecognizeMethodException();
+        }
+        
+        $methodValue = $this->fetchUrlDataAll($uri);
+        
+        if( $controllerReflection->hasMethod($methodName) &&
+            $controllerReflection->getMethod($methodName)->isPublic() &&
+            $this->checkForHttpMethod($controllerReflection->getMethod($methodName)->getDocComment())
+        ){
+            
+            if(!empty($methodValue)){
+                (new $controller)->$methodName($methodValue);
+            } else {
+                (new $controller)->$methodName();
+            }
+            
+            $this->currentUri = $uri;
+            
+        }
+        
+        return $this;
     }
     
     private function checkPathInfo($routeUrl, $http_method)
@@ -46,16 +90,18 @@ class Route
         return false;
     }
     
-    private  function callController($controllerPath, $methodValue = [])
+    private  function callController($uri, $controllerPath, $methodValue = [])
     {
-        list($controllerName,$method) = explode('::',$controllerPath);
+        list($controllerName,$methodName) = explode('::',$controllerPath);
         $namespacePath = 'App\\Controllers\\';
         $controller = $namespacePath . $controllerName;
         if(!empty($methodValue)){
-            (new $controller)->$method($methodValue);
+            (new $controller)->$methodName($methodValue);
         } else {
-            (new $controller)->$method();
+            (new $controller)->$methodName();
         }
+        
+        $this->currentUri = $uri;
     }
     
     private function fetchUrlData($uri)
@@ -78,38 +124,25 @@ class Route
         return $uriNameWithValue;
     }
     
+    public function setName($routeName)
+    {
+        $this->stacksOfUrls[$routeName] = $this->currentUri;
+    }
     
-
-    public function all($uri, $controllerName){
-        $namespacePath = 'App\\Controllers\\';
-        $controller = $namespacePath . $controllerName;
-        $controllerReflection = new \ReflectionClass($controller);
-    
-    
-        $methods = $controllerReflection->getMethods();
-        $methodName = '';
-        $methods = array_map(function($obj){
-          return strtolower($obj->name);
-        },$methods);
+    public function generateRouteUrl($routeName, $values = [], $method = '') {
         
-        if(!in_array($methodName = $this->getUserClientMethod($uri),$methods)){
-            throw new UnrecognizeMethodException();
+        $uri = $this->stacksOfUrls[$routeName];
+        if(empty($method)){
+            $urlResult = preg_replace_callback('/\{(\w+)\}/', function($matches)use($values){
+                return $values[$matches[1]];
+            },$uri);
+        } else {
+            $valuesImplode = implode('/',$values);
+            $routeSeparator = '/';
+            $urlResult = $uri . $method . $routeSeparator . $valuesImplode;
         }
         
-        $methodValue = $this->fetchUrlDataAll($uri);
-
-        if( $controllerReflection->hasMethod($methodName) &&
-            $controllerReflection->getMethod($methodName)->isPublic() &&
-            $this->checkForHttpMethod($controllerReflection->getMethod($methodName)->getDocComment())
-        ){
-            
-            if(!empty($methodValue)){
-                (new $controller)->$methodName($methodValue);
-            } else {
-                (new $controller)->$methodName();
-            }
-        }
-
+        return $urlResult;
     }
     
     private function getUserClientMethod($uri)
@@ -169,6 +202,5 @@ class Route
         
         return $urlValues;
     }
-    
     
 }
