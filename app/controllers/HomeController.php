@@ -2,13 +2,11 @@
 
 namespace App\Controllers;
 
-class HomeController
+
+use App\App;
+
+class HomeController extends Controller
 {
-    private $db;
-    
-    public function __construct()
-    {
-    }
     
     public function index($data)
     {
