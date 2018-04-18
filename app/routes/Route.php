@@ -30,7 +30,7 @@ class Route
             $urlData = $this->fetchUrlData($uri);
             $this->callController($uri,$controller,$urlData);
         }
-        
+        $this->currentUri = $uri;
         return $this;
     }
     
@@ -39,6 +39,7 @@ class Route
         if ($this->checkPathInfo($uri, static::POST_METHOD)) {
             $this->callController($uri, $controller);
         }
+        $this->currentUri = $uri;
         return $this;
     }
     
@@ -55,26 +56,23 @@ class Route
         },$methods);
         
         if(!in_array($methodName = $this->getUserClientMethod($uri),$methods)){
-            throw new UnrecognizeMethodException();
+            //todo: remove it later on
+            //throw new UnrecognizeMethodException();
+            return $this;
         }
         
         $methodValue = $this->fetchUrlDataAll($uri);
-        
         if( $controllerReflection->hasMethod($methodName) &&
             $controllerReflection->getMethod($methodName)->isPublic() &&
             $this->checkForHttpMethod($controllerReflection->getMethod($methodName)->getDocComment())
         ){
-            
             if(!empty($methodValue)){
                 (new $controller)->$methodName($methodValue);
             } else {
                 (new $controller)->$methodName();
             }
-            
             $this->currentUri = $uri;
-            
         }
-        
         return $this;
     }
     
@@ -100,8 +98,6 @@ class Route
         } else {
             (new $controller)->$methodName();
         }
-        
-        $this->currentUri = $uri;
     }
     
     private function fetchUrlData($uri)
@@ -130,7 +126,6 @@ class Route
     }
     
     public function generateRouteUrl($routeName, $values = [], $method = '') {
-        
         $uri = $this->stacksOfUrls[$routeName];
         if(empty($method)){
             $urlResult = preg_replace_callback('/\{(\w+)\}/', function($matches)use($values){
@@ -148,10 +143,11 @@ class Route
     private function getUserClientMethod($uri)
     {
         $userClientUrl = $_SERVER['REQUEST_URI'];
-        
         $patternIndex = 0;
         if(strpos($userClientUrl, $uri) !== $patternIndex){
-            throw new BadUrlException();
+            // todo: remove it later on
+            //throw new BadUrlException();
+            return false;
         }
         
         $urlClient = $userClientUrl;
