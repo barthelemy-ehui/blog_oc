@@ -2,10 +2,7 @@
     "autoload" : {
       "psr-4": {
         "App\\": "app"
-      },
-        "files": [
-            "app/routes/router.php"
-        ]
+      }
     },
     "autoload-dev": {
         "psr-4": {

@@ -3,7 +3,7 @@
 namespace App\controllers;
 
 
-class TestController
+class TestController extends Controller
 {
     
     /**
