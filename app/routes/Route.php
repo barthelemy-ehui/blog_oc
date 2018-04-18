@@ -4,6 +4,7 @@ namespace App\Routes;
 use App\exceptions\BadUrlException;
 use App\exceptions\UnrecognizeHttpMethodException;
 use App\exceptions\UnrecognizeMethodException;
+use App\App;
 
 class Route
 {
@@ -22,6 +23,13 @@ class Route
     private $stacksOfUrls = [];
 
     private $currentUri;
+    
+    private $app;
+    
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
     
     public function get($uri, $controller)
     {
@@ -67,9 +75,9 @@ class Route
             $this->checkForHttpMethod($controllerReflection->getMethod($methodName)->getDocComment())
         ){
             if(!empty($methodValue)){
-                (new $controller)->$methodName($methodValue);
+                (new $controller($this->app))->$methodName($methodValue);
             } else {
-                (new $controller)->$methodName();
+                (new $controller($this->app))->$methodName();
             }
             $this->currentUri = $uri;
         }
@@ -94,9 +102,9 @@ class Route
         $namespacePath = 'App\\Controllers\\';
         $controller = $namespacePath . $controllerName;
         if(!empty($methodValue)){
-            (new $controller)->$methodName($methodValue);
+            (new $controller($this->app))->$methodName($methodValue);
         } else {
-            (new $controller)->$methodName();
+            (new $controller($this->app))->$methodName();
         }
     }
     
