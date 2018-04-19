@@ -2,6 +2,8 @@
 require_once "../vendor/autoload.php";
 
 use App\Routes\RouteSingleton;
+use App\Repositories\RepositoryManager;
+use App\Repositories\UserRepository;
 use App\Routes\Route;
 use App\App;
 
@@ -10,10 +12,18 @@ $twig = new Twig_Environment($loader, array(
     'cache' => '../cache',
 ));
 
+
+$repoManager = new RepositoryManager();
+$repoManager->add([
+    'UserRepository' => new UserRepository()
+]);
+
 $app = new App();
 $app->add([
-    'twig'=>$twig
+    'twig'=>$twig,
+    'RepoManager'=>$repoManager
 ]);
+
 
 /** @var Route $route */
 $route = RouteSingleton::getInstance($app);
