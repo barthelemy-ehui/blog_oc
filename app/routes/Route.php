@@ -64,8 +64,6 @@ class Route
         },$methods);
         
         if(!in_array($methodName = $this->getUserClientMethod($uri),$methods)){
-            //todo: remove it later on
-            //throw new UnrecognizeMethodException();
             return $this;
         }
         
@@ -153,8 +151,6 @@ class Route
         $userClientUrl = $_SERVER['REQUEST_URI'];
         $patternIndex = 0;
         if(strpos($userClientUrl, $uri) !== $patternIndex){
-            // todo: remove it later on
-            //throw new BadUrlException();
             return false;
         }
         
@@ -163,8 +159,6 @@ class Route
             $urlClient = substr_replace($userClientUrl,'',0,strlen($uri));
         }
        
-        // By convention, after stripping out the route uri part, the first index among the separator is the name of the method
-        // for instance, /home/show/123, we remove '/home' then keep '/show/123' and use show as the method of the controller
         $methodName = explode('/',$urlClient)[1];
         return strtolower($methodName);
     }
@@ -198,10 +192,8 @@ class Route
         
         $urlValues = explode('/',$urlClient);
         
-        // because there is an empty value after explode, we don't need it, so we get rid of it
         array_shift($urlValues);
         
-        // we get rid of the method name
         array_shift($urlValues);
         
         return $urlValues;

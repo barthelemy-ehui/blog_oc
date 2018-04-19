@@ -28,6 +28,5 @@ $app->add([
 /** @var Route $route */
 $route = RouteSingleton::getInstance($app);
 
-// declaration des routes des routes
 $route->get('/hello/{name}','HomeController::inscription')->setName('auth.hello');
 $route->all('/', 'testController')->setName('controller.alone');
