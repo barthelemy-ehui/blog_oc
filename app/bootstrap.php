@@ -2,6 +2,7 @@
 require_once "../vendor/autoload.php";
 
 use App\Routes\RouteSingleton;
+use App\Database\DBsingleton;
 use App\Repositories\RepositoryManager;
 use App\Repositories\UserRepository;
 use App\Routes\Route;
@@ -13,9 +14,11 @@ $twig = new Twig_Environment($loader, array(
 ));
 
 
+$pdo = DBSingleton::getInstance();
+
 $repoManager = new RepositoryManager();
 $repoManager->add([
-    'UserRepository' => new UserRepository()
+    'UserRepository' => new UserRepository($pdo)
 ]);
 
 $app = new App();
