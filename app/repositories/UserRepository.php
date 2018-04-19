@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 
-class UserRepository extends Repository
+class UserRepository implements IRepository
 {
     
     public function getAll()
