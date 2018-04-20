@@ -13,7 +13,6 @@ $twig = new Twig_Environment($loader, array(
     'cache' => '../cache',
 ));
 
-
 $pdo = DBSingleton::getInstance();
 
 $repoManager = new RepositoryManager();
@@ -24,13 +23,16 @@ $repoManager->add([
 $app = new App();
 $app->add([
     'twig'=>$twig,
-    'RepoManager'=>$repoManager
+    'repoManager'=>$repoManager
 ]);
 
 
 /** @var Route $route */
 $route = RouteSingleton::getInstance($app);
+$twig->addGlobal('route',$route);
 
 // declaration des routes des routes
+
+
 $route->get('/hello/{name}','HomeController::inscription')->setName('auth.hello');
-$route->all('/', 'testController')->setName('controller.alone');
+$route->all('/test', 'TestController')->setName('controller.alone');
