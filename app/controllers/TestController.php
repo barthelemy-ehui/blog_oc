@@ -31,7 +31,6 @@ class TestController extends Controller
      * http_method=get
      */
     public function show($value){
-        var_dump($value);
         echo 'show method';
     }
 }
