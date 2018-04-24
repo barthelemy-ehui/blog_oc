@@ -15,9 +15,6 @@ $twig = new Twig_Environment($loader, array(
 
 $pdo = DBSingleton::getInstance();
 
-(new UserRepository($pdo))->getById(1);
-die;
-
 $repoManager = new RepositoryManager();
 $repoManager->add([
     'UserRepository' => new UserRepository($pdo)
