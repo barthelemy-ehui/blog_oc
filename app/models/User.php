@@ -1,10 +1,10 @@
 <?php
-namespace App\models;
-
+namespace App\Models;
 
 class User extends Model
 {
-    public $name;
+    public $firstname;
+    public $lastname;
     public $email;
     public $password;
     

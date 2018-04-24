@@ -2,26 +2,49 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
+use \Pdo;
 
 class UserRepository extends Repository implements IRepository
 {
     
     public function getAll()
     {
-        //$this->pdo->query('SELECT * FROM users');
-        $virtualUser1 = new stdClass();
-        $virtualUser1->name = 'alex';
-        $virtualUser1->email = 'alex@gmail.com';
-
-        $virtualUser2 = new stdClass();
-        $virtualUser2->name = 'bose';
-        $virtualUser2->email = 'bose@gmail.com';
-        
-        return [$virtualUser1, $virtualUser2];
+        $sqlStmt = 'SELECT * FROM users';
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->execute();
+         return $stmt->fetchAll(PDO::FETCH_CLASS,User::class);
     }
     
+    public function verifyUserCredential($email, $password)
+    {
+        $sqlStmt = 'SELECT * FROM users WHERE email = :email AND password = :password';
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->execute([
+            ':email' => $email,
+            ':password' => $password
+        ]);
+        return $stmt->fetchObject(User::class);
+    }
+
     public function getById($id)
     {
-        // TODO: Implement getById() method.
+        $sqlStmt = 'SELECT * FROM users WHERE id = :id';
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->execute([
+            ':id' => $id
+        ]);
+        
+        return $stmt->fetchObject(User::class);
+    }
+    
+    public function verifyUserEmail($email)
+    {
+    
+    }
+    
+    public function insertNewUser($data)
+    {
+    
     }
 }
