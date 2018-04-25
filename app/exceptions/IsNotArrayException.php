@@ -3,7 +3,7 @@ namespace App\Exceptions;
 
 use \Exception;
 
-class BadUrlException extends Exception
+class IsNotArrayException extends Exception
 {
-    
+
 }

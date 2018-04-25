@@ -1,6 +1,6 @@
 <?php
 
-namespace App\controllers;
+namespace App\Controllers;
 
 
 class TestController extends Controller
@@ -29,6 +29,7 @@ class TestController extends Controller
     
     /**
      * http_method=get
+     * auth=admin
      */
     public function show($value){
         echo 'show method';

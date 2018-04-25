@@ -1,9 +1,10 @@
 <?php
 
-namespace App\exceptions;
+namespace App\Exceptions;
 
+use \Exception;
 
-class UnrecognizeHttpMethodException extends \Exception
+class UnrecognizeHttpMethodException extends Exception
 {
     
 }

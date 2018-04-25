@@ -1,5 +1,5 @@
 <?php
-namespace App\controllers;
+namespace App\Controllers;
 
 
 class RegisterController extends Controller
@@ -7,9 +7,14 @@ class RegisterController extends Controller
     
     /**
      * http_method=post
+     * auth=admin
      */
     public function register(){
         echo 'register';
+    }
+    
+    public function connect(){
+    
     }
     
     /**

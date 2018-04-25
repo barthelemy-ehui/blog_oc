@@ -1,10 +1,10 @@
 <?php
 namespace App\Routes;
 
-use App\exceptions\BadUrlException;
-use App\exceptions\UnrecognizeHttpMethodException;
-use App\exceptions\UnrecognizeMethodException;
 use App\App;
+use App\Auths\Auth;
+use App\exceptions\NotLoginException;
+use App\exceptions\UnrecognizeHttpMethodException;
 
 class Route
 {
@@ -72,6 +72,7 @@ class Route
             $controllerReflection->getMethod($methodName)->isPublic() &&
             $this->checkForHttpMethod($controllerReflection->getMethod($methodName)->getDocComment())
         ){
+            $this->checkForAuthentification($controllerName, $methodName);
             if(!empty($methodValue)){
                 (new $controller($this->app))->$methodName($methodValue);
             } else {
@@ -99,6 +100,7 @@ class Route
         list($controllerName,$methodName) = explode('::',$controllerPath);
         $namespacePath = 'App\\Controllers\\';
         $controller = $namespacePath . $controllerName;
+        $this->checkForAuthentification($controllerName, $methodName);
         if(!empty($methodValue)){
             (new $controller($this->app))->$methodName($methodValue);
         } else {
@@ -187,7 +189,7 @@ class Route
         $defaultRouteSeparator = '/';
         $urlClient = $userClientUrl;
         if($uri !== $defaultRouteSeparator){
-            $urlClient = substr_replace($userClientUrl,'',0,strlen($uri));
+            $urlClient = substr_replace($userClientUrl,'',0, strlen($uri));
         }
         
         $urlValues = explode('/',$urlClient);
@@ -199,4 +201,17 @@ class Route
         return $urlValues;
     }
     
+    private function checkForAuthentification($controllerName, $methodName) {
+
+        $namespacePath = 'App\\Controllers\\';
+        $controller = $namespacePath . $controllerName;
+        $controllerReflection = new \ReflectionClass($controller);
+    
+        $commentFromMethod = $controllerReflection->getMethod($methodName)->getDocComment();
+        $admin = '/(auth=admin)/';
+        preg_match($admin, $commentFromMethod,$matches);
+        if($matches && !$this->app->load('session')->has(Auth::UserAuthentifiedKeySession)) {
+           throw new NotLoginException();
+        }
+    }
 }
