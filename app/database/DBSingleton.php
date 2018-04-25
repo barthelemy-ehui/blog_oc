@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Database;
+
+
+use \PDO;
+
 final class DBSingleton
 {
     /**
