@@ -28,3 +28,28 @@ For instance
 The following command allow testing
 
 ```phpunit --bootstrap vendor/autoload.php tests/fileName.php```
+
+**Validator**
+
+Validator declaration with 
+
+```$validator = new \App\validation\Validator();```
+Adding Rule with:
+
+``$validator->addRule([
+      'firstname' => \App\validation\Validator::REQUIRED,
+      'lastname' => \App\validation\Validator::REQUIRED,
+      'email' => \App\validation\Validator::REQUIRED_EMAIL,
+      'password' => \App\validation\Validator::REQUIRED,
+  ]);``
+  
+  **Call the result**
+  
+``if($result = $validator->validate()) {
+    var_dump($result);
+    } else {
+        $validator->getErrors();
+    }
+``
+
+
