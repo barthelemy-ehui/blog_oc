@@ -29,6 +29,7 @@ class TestController extends Controller
     
     /**
      * http_method=get
+     * auth=admin
      */
     public function show($value){
         echo 'show method';
