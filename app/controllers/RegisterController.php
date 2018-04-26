@@ -17,7 +17,11 @@ class RegisterController extends Controller
     }
     
     public function connect(){
+        //
+    }
     
+    public function store(){
+        //
     }
     
     /**
