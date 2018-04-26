@@ -7,12 +7,17 @@ class RegisterController extends Controller
     
     /**
      * http_method=post
+     * auth=admin
      */
     public function register(){
         // register
         // address email, password, first_name, last_name
         
         echo 'register';
+    }
+    
+    public function connect(){
+    
     }
     
     /**

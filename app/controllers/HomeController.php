@@ -14,11 +14,14 @@ class HomeController extends Controller
         echo 'index';
      
     }
-    
+
     public function show(){
         echo 'show';
     }
     
+    /**
+     * auth=admin
+     */
     public function inscription($name){
 
         echo $this->app->load('twig')->render('index.twig',['the'=>'logo']);
