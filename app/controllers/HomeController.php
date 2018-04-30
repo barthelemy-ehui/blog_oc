@@ -5,12 +5,12 @@ namespace App\Controllers;
 class HomeController extends Controller
 {
     
-    public function index($data)
+    /**
+     * http_method=get
+     */
+    public function index()
     {
-        echo 'index';
-    }
-    
-    public function show(){
-        echo 'show';
+        
+        echo $this->app->load('twig')->render('front/index.twig');
     }
 }

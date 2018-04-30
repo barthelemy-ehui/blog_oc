@@ -1,15 +1,22 @@
 <?php
 namespace App\Auths;
 
+use App\Models\User;
+
 class Session
 {
     
     public function get($sessionName) {
-        return $_SESSION[$sessionName];
+        $class = $_SESSION[$sessionName];
+        return unserialize($class, [
+            'allowed_classes'=> [
+                User::class
+            ]
+        ]);
     }
     
     public function set($sessionName, $sessionValue) {
-        $_SESSION[$sessionName] = $sessionValue;
+        $_SESSION[$sessionName] = serialize($sessionValue);
     }
     
     public function has($sessionName) {
@@ -17,6 +24,7 @@ class Session
     }
     
     public function clear($sessionName) {
+        
         unset($_SESSION[$sessionName]);
     }
 }
