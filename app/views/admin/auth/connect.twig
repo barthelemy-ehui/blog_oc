@@ -1,1 +1,30 @@
-Ceci est la page de connexion
+{% extends 'admin/layout.twig'%}
+{% block title %}Connexion{% endblock %}
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <body class="bg-dark">
+    <div class="container">
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">Login</div>
+            <div class="card-body">
+                <form action="/admin/register/login" method="post">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input class="form-control" name="email" id="email" type="email" aria-describedby="emailHelp" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input class="form-control" name="password" id="password" type="password" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                </form>
+                <div class="text-center">
+                    <a class="d-block small mt-3" href="register.html">Register an Account</a>
+                    <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+                </div>
+            </div>
+        </div>
+{% endblock %}

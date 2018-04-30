@@ -4,26 +4,28 @@ namespace App\Controllers;
 
 
 use App\App;
+use App\Models\User;
+use App\Auths\Auth;
 
 class HomeController extends Controller
 {
     
-    public function index($data)
+    /**
+     * http_method=get
+     */
+    public function index()
     {
-        var_dump($data);
-        echo 'index';
-     
-    }
-
-    public function show(){
-        echo 'show';
+        echo $this->app->load('twig')->render('front/index.twig');
     }
     
     /**
-     * auth=admin
+     *http_method=get
+     *auth=admin
      */
-    public function inscription($name){
-
-        echo $this->app->load('twig')->render('index.twig',['the'=>'logo']);
+    public function connected(){
+       $user = $this->app->load('session')->get(Auth::UserAuthentifiedKeySession);
+       echo $this->app->load('twig')->render('index.twig',[
+           'user' => $user
+       ]);
     }
 }
