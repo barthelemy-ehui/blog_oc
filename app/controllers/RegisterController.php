@@ -60,12 +60,11 @@ class RegisterController extends Controller
     public function login()
     {
         $stmt = $this->app->load('auth')->login($_POST['email'], $_POST['password']);
+        //todo: ajouter la validation ici le mercredi 
         if($this->app->load('auth')->login($_POST['email'], $_POST['password'])){
             header("Location: /home/connected");
         }
-        
-        //todo: erreur
-        echo 'error out';
+        echo 'something wrong either with you username or your password';
     }
     
     /**

@@ -18,13 +18,16 @@ class UserRepository extends Repository implements IRepository
     
     public function verifyUserCredential($email, $password)
     {
-        $sqlStmt = 'SELECT * FROM users WHERE email = :email AND password = :password';
+        $sqlStmt = 'SELECT * FROM users WHERE email = :email';
         $stmt = $this->pdo->prepare($sqlStmt);
         $stmt->execute([
-            ':email' => $email,
-            ':password' => $password
+            ':email' => $email
         ]);
-        return $stmt->fetchObject(User::class);
+        $user = $stmt->fetchObject(User::class);
+        if(password_verify($password,$user->getPassword())) {
+            return $user;
+        }
+        return false;
     }
 
     public function getById($id)
