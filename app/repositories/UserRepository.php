@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use \Pdo;
+use App\Exceptions\UserNotFoundException;
 
 class UserRepository extends Repository implements IRepositoryInterface
 {
@@ -18,13 +19,20 @@ class UserRepository extends Repository implements IRepositoryInterface
     
     public function verifyUserCredential($email, $password)
     {
-        $sqlStmt = 'SELECT * FROM users WHERE email = :email AND password = :password';
+        $sqlStmt = 'SELECT * FROM users WHERE email = :email';
         $stmt = $this->pdo->prepare($sqlStmt);
         $stmt->execute([
-            ':email' => $email,
-            ':password' => $password
+            ':email' => $email
         ]);
-        return $stmt->fetchObject(User::class);
+        $user = $stmt->fetchObject(User::class);
+        if(!$user){
+            throw new UserNotFoundException();
+        }
+        
+        if(password_verify($password,$user->getPassword())) {
+            return $user;
+        }
+        return false;
     }
 
     public function getById($id)
@@ -53,6 +61,7 @@ class UserRepository extends Repository implements IRepositoryInterface
         $data = array_merge($data, [
             'created_at' => (new \DateTime('now'))->format('Y-m-d H:i:s')
         ]);
+        
         $sqlStmt = 'INSERT into users (firstname,lastname,email,password,created_at) VALUES (:firstname,:lastname,:email,:password, :created_at)';
         $stmt = $this->pdo->prepare($sqlStmt);
         $stmt->execute($data);

@@ -33,7 +33,6 @@ class Route
     
     public function get($uri, $controller)
     {
-        
         if ($this->checkPathInfo($uri, static::GET_METHOD)) {
             $urlData = $this->fetchUrlData($uri);
             $this->callController($uri,$controller,$urlData);
@@ -87,8 +86,19 @@ class Route
     {
         if(isset($_SERVER['REQUEST_URI'])) {
             $clientUrl = $_SERVER['REQUEST_URI'];
-            $routeUrlReplaced = preg_replace('/\/?\{[[:alnum:]]+\}\/?/','',$routeUrl);
-            return strpos($clientUrl,$routeUrlReplaced) !== false
+           
+            // s'y a pregmatch, go, s'y a pas de preg_match on verifie si c'est identitique
+            $pattern = '/\/?\{[[:alnum:]]+\}\/?/';
+            preg_match($pattern, $routeUrl, $matches);
+            $routeUrlReplaced = $routeUrl;
+            $strPosCheck = $clientUrl === $routeUrl;
+            if($matches) {
+                $routeUrlReplaced = preg_replace($pattern,'',$routeUrl);
+                $strPosCheck = strpos($clientUrl,$routeUrlReplaced);
+            }
+            
+            return
+                $strPosCheck !== false
                 &&
                 strtolower($http_method) === strtolower($_SERVER['REQUEST_METHOD']);
         }
@@ -173,7 +183,10 @@ class Route
             throw new UnrecognizeHttpMethodException();
         }
     
-        $httpMethodAsked = strtolower(explode('=',$commentsWildcardStripOut)[1]);
+        //$httpMethodAsked = //strtolower(explode('=',$commentsWildcardStripOut)[1]);
+        $httpMethod = '/(http_method=(post|get|delete|put))/';
+        preg_match($httpMethod, $commentsWildcardStripOut,$matches);
+        $httpMethodAsked = $matches[2];
         if(!in_array($httpMethodAsked , static::METHODS)){
             throw new UnrecognizeHttpMethodException();
         }
@@ -210,7 +223,7 @@ class Route
         $commentFromMethod = $controllerReflection->getMethod($methodName)->getDocComment();
         $admin = '/(auth=admin)/';
         preg_match($admin, $commentFromMethod,$matches);
-        if($matches && !$this->app->load('session')->has(Auth::UserAuthentifiedKeySession)) {
+        if($matches && !$this->app->load('session')->has(Auth::USERAUTHENTIFIEDKEYSESSION)) {
            throw new NotLoginException();
         }
     }
