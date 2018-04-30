@@ -47,14 +47,12 @@ $twig->addGlobal('route',$route);
 /**
  * front-end route
  */
+
 //$route->all('/home', 'HomeController');
-//$route->all('/test', 'TestController');
 
 /**
  * Admin route
  */
 $route->get('/admin', 'AdminController::index');
+$route->get('/admin/users', 'AdminController::users');
 $route->all('/admin/register', 'RegisterController');
-/**
- * Authentification
- */

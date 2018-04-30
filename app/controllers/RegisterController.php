@@ -2,6 +2,7 @@
 namespace App\controllers;
 
 use App\Auths\Auth;
+use App\Validation\Validator;
 
 class RegisterController extends Controller
 {
@@ -20,8 +21,37 @@ class RegisterController extends Controller
         echo $this->app->load('twig')->render('admin/auth/connect.twig');
     }
     
+    /**
+     * http_method=post
+     */
     public function store() {
-        // todo : stocker les identifiants
+
+        $validator = new Validator();
+        $validator->addPasswordToCompare('passwordConfirm');
+        $validator->addRule([
+            'firstname' => Validator::REQUIRED,
+            'lastname' => Validator::REQUIRED,
+            'email' => Validator::REQUIRED_EMAIL,
+            'password' => Validator::REQUIRED_PASSWORD_COMPARE
+        ]);
+        
+        $data = $validator->validate();
+        $errors = $validator->getErrors();
+        if($errors['errors'] && $errors['datas']){
+           echo $this->app->load('twig')->render('admin/auth/register.twig',[
+               'errors' => $errors['errors'],
+               'datas' => $errors['datas']
+           ]);
+           return;
+        }
+    
+        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        $user = $this->app
+            ->load('repoManager')
+            ->getInstance('UserRepository')
+            ->insertNewUser($data);
+        
+        header('Location: /admin/users');
     }
     
     /**
