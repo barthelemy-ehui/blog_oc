@@ -4,11 +4,16 @@ namespace App\Controllers;
 
 class AdminController extends Controller
 {
+    /**
+     * http_method=get
+     * auth=admin
+     */
     public function index() {
         echo $this->app->load('twig')->render('admin/index.twig');
     }
     
     /**
+     * http_method=get
      * auth=admin
      */
     public function users(){
