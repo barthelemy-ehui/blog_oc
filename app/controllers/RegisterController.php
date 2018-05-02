@@ -62,7 +62,7 @@ class RegisterController extends Controller
     {
         $stmt = $this->app->load('auth')->login($_POST['email'], $_POST['password']);
         if($this->app->load('auth')->login($_POST['email'], $_POST['password'])){
-            header("Location: /home/connected");
+            header("Location: /admin");
         }
         
         echo 'something wrong either with you username or your password';
@@ -76,6 +76,7 @@ class RegisterController extends Controller
         if($this->app->load('session')->has(Auth::USERAUTHENTIFIEDKEYSESSION)){
             $this->app->load('session')->clear(Auth::USERAUTHENTIFIEDKEYSESSION);
         }
-        echo 'You have been logged out';
+        
+        header('Location: /admin/register/connect');
     }
 }
