@@ -17,15 +17,4 @@ class HomeController extends Controller
     {
         echo $this->app->load('twig')->render('front/index.twig');
     }
-    
-    /**
-     *http_method=get
-     *auth=admin
-     */
-    public function connected(){
-       $user = $this->app->load('session')->get(Auth::UserAuthentifiedKeySession);
-       echo $this->app->load('twig')->render('index.twig',[
-           'user' => $user
-       ]);
-    }
 }
