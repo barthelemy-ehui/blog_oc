@@ -1,3 +1,33 @@
-{% for user in users %}
-    {{ user.firstname }}
-{% endfor %}
+
+{% extends 'admin/layout.twig'%}
+{% block title %}Admin{% endblock %}
+
+{% block navigation %}{{ parent() }}{% endblock %}
+{% block content %}
+            <table class="table">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Prenom</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+
+                    <tr>
+                        <th scope="row">1</th>
+                        <td> {{ user.firstname }}</td>
+                        <td> {{ user.lastname }}</td>
+                        <td> {{ user.email }}</td>
+                        <td>
+                            <a class="btn btn-light" href="{{ user.id }}">Modifier</a>
+                            <a class="btn btn-danger" href="{{ user.id }}">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+{% endblock %}

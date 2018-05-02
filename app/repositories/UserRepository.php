@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use \Pdo;
+use App\Exceptions\UserNotFoundException;
 
 class UserRepository extends Repository implements IRepository
 {
@@ -24,6 +25,10 @@ class UserRepository extends Repository implements IRepository
             ':email' => $email
         ]);
         $user = $stmt->fetchObject(User::class);
+        if(!$user){
+            throw new UserNotFoundException();
+        }
+        
         if(password_verify($password,$user->getPassword())) {
             return $user;
         }

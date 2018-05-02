@@ -8,6 +8,9 @@ class AdminController extends Controller
         echo $this->app->load('twig')->render('admin/index.twig');
     }
     
+    /**
+     * auth=admin
+     */
     public function users(){
         
         $users =  $this->app

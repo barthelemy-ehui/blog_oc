@@ -9,6 +9,7 @@ class RegisterController extends Controller
     
     /**
      * http_method=get
+     * auth=admin
      */
     public function index() {
         echo $this->app->load('twig')->render('admin/auth/register.twig');
@@ -21,7 +22,7 @@ class RegisterController extends Controller
         echo $this->app->load('twig')->render('admin/auth/connect.twig');
     }
     
-    /**
+    /**w
      * http_method=post
      */
     public function store() {
@@ -60,7 +61,7 @@ class RegisterController extends Controller
     public function login()
     {
         $stmt = $this->app->load('auth')->login($_POST['email'], $_POST['password']);
-        //todo: ajouter la validation ici le mercredi 
+        //todo: ajouter la validation ici le mercredi
         if($this->app->load('auth')->login($_POST['email'], $_POST['password'])){
             header("Location: /home/connected");
         }
