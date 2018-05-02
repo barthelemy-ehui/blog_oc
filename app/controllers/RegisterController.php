@@ -22,7 +22,7 @@ class RegisterController extends Controller
         echo $this->app->load('twig')->render('admin/auth/connect.twig');
     }
     
-    /**w
+    /**
      * http_method=post
      */
     public function store() {
@@ -63,7 +63,7 @@ class RegisterController extends Controller
         $stmt = $this->app->load('auth')->login($_POST['email'], $_POST['password']);
         //todo: ajouter la validation ici le mercredi
         if($this->app->load('auth')->login($_POST['email'], $_POST['password'])){
-            header("Location: /home/connected");
+            header("Location: /admin");
         }
         echo 'something wrong either with you username or your password';
     }
@@ -76,6 +76,7 @@ class RegisterController extends Controller
         if($this->app->load('session')->has(Auth::UserAuthentifiedKeySession)){
             $this->app->load('session')->clear(Auth::UserAuthentifiedKeySession);
         }
-        echo 'You have been logged out';
+        
+        header('Location: /admin/register/connect');
     }
 }
