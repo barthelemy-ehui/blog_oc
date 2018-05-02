@@ -46,28 +46,4 @@ class User extends Model
         return $this->password;
     }
     
-    /**
-     * @return mixed
-     */
-    public function getCreatedAt()
-    {
-        return $this->created_at;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getUpdateAt()
-    {
-        return $this->update_at;
-    }
-    
-    /**
-     * @param mixed $update_at
-     */
-    public function setUpdateAt($update_at): void
-    {
-        $this->update_at = $update_at;
-    }
-    
 }
