@@ -4,6 +4,13 @@
 
 {% block navigation %}{{ parent() }}{% endblock %}
 {% block content %}
+    <div class="row">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <a href="/admin/register/index" class="btn btn-info">Ajouter un nouvel utilisateur</a>
+        </div>
+    </div>
+
             <table class="table">
                 <thead class="thead-light">
                 <tr>
@@ -23,8 +30,8 @@
                         <td> {{ user.lastname }}</td>
                         <td> {{ user.email }}</td>
                         <td>
-                            <a class="btn btn-light" href="{{ user.id }}">Modifier</a>
-                            <a class="btn btn-danger" href="{{ user.id }}">Supprimer</a>
+                            <a class="btn btn-light" href="#{{ user.id }}"><s>Modifier</s></a>
+                            <a class="btn btn-danger" href="#{{ user.id }}"><s>Supprimer</s></a>
                         </td>
                     </tr>
                 {% endfor %}
