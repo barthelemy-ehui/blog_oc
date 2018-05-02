@@ -55,6 +55,8 @@ $route->all('/', 'HomeController');
 $route->get('/admin', 'AdminController::index');
 $route->get('/admin/users', 'AdminController::users');
 $route->all('/admin/register', 'RegisterController');
+$route->all('/admin/posts', 'PostController');
+$route->all('/admin/comments', 'CommentController');
 
 /**
  * Authentification
