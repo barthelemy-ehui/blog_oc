@@ -48,7 +48,7 @@ $twig->addGlobal('route',$route);
  * front-end route
  */
 
-$route->all('/home', 'HomeController');
+$route->all('/', 'HomeController');
 
 /**
  * Admin route
