@@ -60,12 +60,31 @@ class RegisterController extends Controller
      */
     public function login()
     {
-        $stmt = $this->app->load('auth')->login($_POST['email'], $_POST['password']);
-        //todo: ajouter la validation ici le mercredi
-        if($this->app->load('auth')->login($_POST['email'], $_POST['password'])){
+        $validator = new Validator();
+        $validator->addPasswordToCompare('passwordConfirm');
+        $validator->addRule([
+
+            'email' => Validator::REQUIRED_EMAIL,
+            'password' => Validator::REQUIRED
+        ]);
+    
+        $datas = $validator->validate();
+        $errors = $validator->getErrors();
+        
+
+        if(count($errors['errors'])){
+            echo $this->app->load('twig')->render('admin/auth/connect.twig',[
+                'datas' => $errors['datas'],
+                'errors' => $errors['errors']
+            ]);
+            return;
+        }
+        
+        $stmt = $this->app->load('auth')->login($datas['email'], $datas['password']);
+        if($this->app->load('auth')->login($datas['email'], $datas['password'])){
             header("Location: /admin");
         }
-        echo 'something wrong either with you username or your password';
+
     }
     
     /**

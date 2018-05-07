@@ -16,6 +16,19 @@ class Comment extends Model
     protected $status;
     protected $post_id;
     
+    const PENDING = 'pending';
+    const PUBLISHED = 'published';
+    
+    const TITLE = 'title';
+    const CONTENT = 'content';
+    
+    const STATUS = [
+        self::PENDING,
+        self::PUBLISHED
+    ];
+    
+    const POST_ID = 'post_id';
+    
     /**
      * @return mixed
      */
