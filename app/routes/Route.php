@@ -1,10 +1,12 @@
 <?php
 namespace App\Routes;
 
+use App\App;
+use App\Auths\Auth;
 use App\exceptions\BadUrlException;
+use App\exceptions\NotLoginException;
 use App\exceptions\UnrecognizeHttpMethodException;
 use App\exceptions\UnrecognizeMethodException;
-use App\App;
 
 class Route
 {
@@ -33,7 +35,6 @@ class Route
     
     public function get($uri, $controller)
     {
-        
         if ($this->checkPathInfo($uri, static::GET_METHOD)) {
             $urlData = $this->fetchUrlData($uri);
             $this->callController($uri,$controller,$urlData);
@@ -74,6 +75,7 @@ class Route
             $controllerReflection->getMethod($methodName)->isPublic() &&
             $this->checkForHttpMethod($controllerReflection->getMethod($methodName)->getDocComment())
         ){
+            $this->checkForAuthentification($controllerName, $methodName);
             if(!empty($methodValue)){
                 (new $controller($this->app))->$methodName($methodValue);
             } else {
@@ -88,8 +90,19 @@ class Route
     {
         if(isset($_SERVER['REQUEST_URI'])) {
             $clientUrl = $_SERVER['REQUEST_URI'];
-            $routeUrlReplaced = preg_replace('/\/?\{[[:alnum:]]+\}\/?/','',$routeUrl);
-            return strpos($clientUrl,$routeUrlReplaced) !== false
+           
+            // s'y a pregmatch, go, s'y a pas de preg_match on verifie si c'est identitique
+            $pattern = '/\/?\{[[:alnum:]]+\}\/?/';
+            preg_match($pattern, $routeUrl, $matches);
+            $routeUrlReplaced = $routeUrl;
+            $strPosCheck = $clientUrl === $routeUrl;
+            if($matches) {
+                $routeUrlReplaced = preg_replace($pattern,'',$routeUrl);
+                $strPosCheck = strpos($clientUrl,$routeUrlReplaced);
+            }
+            
+            return
+                $strPosCheck !== false
                 &&
                 strtolower($http_method) === strtolower($_SERVER['REQUEST_METHOD']);
         }
@@ -101,6 +114,7 @@ class Route
         list($controllerName,$methodName) = explode('::',$controllerPath);
         $namespacePath = 'App\\Controllers\\';
         $controller = $namespacePath . $controllerName;
+        $this->checkForAuthentification($controllerName, $methodName);
         if(!empty($methodValue)){
             (new $controller($this->app))->$methodName($methodValue);
         } else {
@@ -177,7 +191,10 @@ class Route
             throw new UnrecognizeHttpMethodException();
         }
     
-        $httpMethodAsked = strtolower(explode('=',$commentsWildcardStripOut)[1]);
+        //$httpMethodAsked = //strtolower(explode('=',$commentsWildcardStripOut)[1]);
+        $httpMethod = '/(http_method=(post|get|delete|put))/';
+        preg_match($httpMethod, $commentsWildcardStripOut,$matches);
+        $httpMethodAsked = $matches[2];
         if(!in_array($httpMethodAsked , static::METHODS)){
             throw new UnrecognizeHttpMethodException();
         }
@@ -193,7 +210,7 @@ class Route
         $defaultRouteSeparator = '/';
         $urlClient = $userClientUrl;
         if($uri !== $defaultRouteSeparator){
-            $urlClient = substr_replace($userClientUrl,'',0,strlen($uri));
+            $urlClient = substr_replace($userClientUrl,'',0, strlen($uri));
         }
         
         $urlValues = explode('/',$urlClient);
@@ -207,4 +224,17 @@ class Route
         return $urlValues;
     }
     
+    private function checkForAuthentification($controllerName, $methodName) {
+
+        $namespacePath = 'App\\Controllers\\';
+        $controller = $namespacePath . $controllerName;
+        $controllerReflection = new \ReflectionClass($controller);
+    
+        $commentFromMethod = $controllerReflection->getMethod($methodName)->getDocComment();
+        $admin = '/(auth=admin)/';
+        preg_match($admin, $commentFromMethod,$matches);
+        if($matches && !$this->app->load('session')->has(Auth::UserAuthentifiedKeySession)) {
+           throw new NotLoginException();
+        }
+    }
 }

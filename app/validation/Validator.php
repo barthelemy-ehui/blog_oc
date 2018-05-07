@@ -1,5 +1,5 @@
 <?php
-namespace App\validation;
+namespace App\Validation;
 
 use App\Exceptions\RuleNotFoundException;
 
@@ -7,8 +7,10 @@ class Validator
 {
     const REQUIRED = 'required';
     const EMAIL = 'email';
-    const REQUIRED_EMAIL = 'require|email';
+    const REQUIRED_EMAIL = 'required|email';
+    const REQUIRED_PASSWORD_COMPARE = 'required|compare';
     
+    private $secondPasswordFieldName;
     
     private $rules;
     
@@ -39,7 +41,6 @@ class Validator
         
         if(count($this->errors)>0){
             $this->userInputDatas = $_POST;
-            return false;
         }
         return $this->datas;
     }
@@ -59,7 +60,8 @@ class Validator
         $messages = [
             self::REQUIRED => 'Ce champs est requis',
             self::EMAIL => 'Email invalide',
-            self::REQUIRED_EMAIL => 'Email invalide ou champs vide'
+            self::REQUIRED_EMAIL => 'Email invalide ou champs vide',
+            self::REQUIRED_PASSWORD_COMPARE => 'Mot de passe requis ou différent'
         ];
         return $messages[$key];
     }
@@ -82,10 +84,29 @@ class Validator
                         'filter' => FILTER_VALIDATE_EMAIL,
                     ];
                     break;
+                case self::REQUIRED_PASSWORD_COMPARE:
+                    $rulesOptions[FILTER_CALLBACK] = [
+                        'options' => 'self::comparePassword',
+                    ];
+                    break;
                 default:
                     throw new RuleNotFoundException();
             }
 
         return $rulesOptions;
+    }
+    
+    public function addPasswordToCompare($fieldName) {
+        $this->secondPasswordFieldName = $fieldName;
+    }
+    
+    private function comparePassword($password)
+    {
+        $secondPassword = $_POST[$this->secondPasswordFieldName];
+        $isNotEmpty = !empty($password) && !empty($secondPassword);
+        if($isNotEmpty && strcmp($password, $secondPassword) === 0){
+            return $password;
+        }
+        return false;
     }
 }

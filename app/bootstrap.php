@@ -1,29 +1,37 @@
 <?php
+session_start();
+
 require_once "../vendor/autoload.php";
 
-use App\Routes\RouteSingleton;
+use App\App;
+use App\Auths\Session;
+use App\Auths\Auth;
 use App\Database\DBsingleton;
 use App\Repositories\RepositoryManager;
 use App\Repositories\UserRepository;
 use App\Routes\Route;
-use App\App;
+use App\Routes\RouteSingleton;
 
 $loader = new Twig_Loader_Filesystem('../app/views');
 $twig = new Twig_Environment($loader, array(
-    'cache' => '../cache',
+    //'cache' => '../cache',
 ));
 
 $pdo = DBSingleton::getInstance();
-
+$session = new Session();
+$userRepository = new UserRepository($pdo);
 $repoManager = new RepositoryManager();
 $repoManager->add([
-    'UserRepository' => new UserRepository($pdo)
+    'UserRepository' => $userRepository
 ]);
 
 $app = new App();
+
 $app->add([
     'twig'=>$twig,
-    'repoManager'=>$repoManager
+    'repoManager'=>$repoManager,
+    'session' => $session,
+    'auth' => new Auth($session, $userRepository),
 ]);
 
 
@@ -31,8 +39,20 @@ $app->add([
 $route = RouteSingleton::getInstance($app);
 $twig->addGlobal('route',$route);
 
-// declaration des routes des routes
+/**
+ * Authentification
+ */
 
 
-$route->get('/hello/{name}','HomeController::inscription')->setName('auth.hello');
-$route->all('/test', 'TestController')->setName('controller.alone');
+/**
+ * front-end route
+ */
+
+$route->all('/home', 'HomeController');
+
+/**
+ * Admin route
+ */
+$route->get('/admin', 'AdminController::index');
+$route->get('/admin/users', 'AdminController::users');
+$route->all('/admin/register', 'RegisterController');
