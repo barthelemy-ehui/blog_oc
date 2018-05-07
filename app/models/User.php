@@ -8,6 +8,7 @@ class User extends Model
     protected $email;
     protected $password;
     protected $created_at;
+    protected $update_at;
     
     public function nameMaj(){
         return strtoupper($this->firstname);
@@ -43,14 +44,6 @@ class User extends Model
     public function getPassword()
     {
         return $this->password;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getCreatedAt()
-    {
-        return $this->created_at;
     }
     
 }

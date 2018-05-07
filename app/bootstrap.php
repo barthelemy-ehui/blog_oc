@@ -48,7 +48,7 @@ $twig->addGlobal('route',$route);
  * front-end route
  */
 
-$route->all('/home', 'HomeController');
+$route->all('/', 'HomeController');
 
 /**
  * Admin route
@@ -56,3 +56,5 @@ $route->all('/home', 'HomeController');
 $route->get('/admin', 'AdminController::index');
 $route->get('/admin/users', 'AdminController::users');
 $route->all('/admin/register', 'RegisterController');
+$route->all('/admin/posts', 'PostController');
+$route->all('/admin/comments', 'CommentController');

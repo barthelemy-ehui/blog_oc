@@ -59,13 +59,13 @@ class UserRepository extends Repository implements IRepository
     public function insertNewUser($data)
     {
         $data = array_merge($data, [
-            'created_at' => (new \DateTime('now'))->format('Y-m-d H:i:s')
+            'create_at' => (new \DateTime('now'))->format('Y-m-d H:i:s')
         ]);
         
-        $sqlStmt = 'INSERT into users (firstname,lastname,email,password,created_at) VALUES (:firstname,:lastname,:email,:password, :created_at)';
+        $sqlStmt = 'INSERT into users (firstname,lastname,email,password,create_at) VALUES (:firstname,:lastname,:email,:password, :create_at)';
         $stmt = $this->pdo->prepare($sqlStmt);
         $stmt->execute($data);
-    
+        
         return $this->getById($this->pdo->lastInsertId());
     }
 }
