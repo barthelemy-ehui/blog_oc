@@ -9,7 +9,23 @@ class Post extends Model
     protected $content;
     protected $status;
     protected $author_id;
-    protected $published_at;
+    protected $publish_at;
+    
+    const PENDING = 'pending';
+    const PUBLISHED = 'published';
+    
+    const SLUG = 'slug';
+    const TITLE = 'title';
+    const DESCRIPTION = 'description';
+    const CONTENT = 'content';
+    
+    const STATUS = [
+        self::PENDING,
+        self::PUBLISHED
+    ];
+    
+    const AUTHOR_ID = 'author_id';
+    const PUBLISH_AT = 'publish_at';
     
     /**
      * @return mixed
