@@ -19,10 +19,7 @@ class Post extends Model
     const DESCRIPTION = 'description';
     const CONTENT = 'content';
     
-    const STATUS = [
-        self::PENDING,
-        self::PUBLISHED
-    ];
+    const STATUS = 'status';
     
     const AUTHOR_ID = 'author_id';
     const PUBLISH_AT = 'publish_at';
