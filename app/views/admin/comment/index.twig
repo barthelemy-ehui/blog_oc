@@ -1,7 +1,35 @@
-{% extends 'admin/layout.twig'%}
+{% extends 'admin/layout.twig' %}
 {% block title %}Admin{% endblock %}
 
 {% block navigation %}{{ parent() }}{% endblock %}
 {% block content %}
-    Page vide. Pas de commentaire.s
+
+    <div class="container">
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Titre</th>
+                <th scope="col">Contenu</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for comment in comments %}
+                <tr>
+                    <th scope="row">{{ comment.id }}</th>
+                    <td> {{ comment.title }} </td>
+                    <td> {{ comment.content }} </td>
+                    <td> {{ comment.status }} </td>
+                    <td><a href="#{{ comment.post_id }}"><i class="fa-info-circle"></i>Article</a></td>
+                    <td>
+                        <a class="btn btn-light" href="#{{ comment.id }}"><s>Approuver</s></a>
+                        <a class="btn btn-danger" href="#{{ comment.id }}"><s>Refuser</s></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
