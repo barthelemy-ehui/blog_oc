@@ -1,0 +1,65 @@
+{% extends 'admin/layout.twig'%}
+{% block title %}Connexion{% endblock %}
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+{% block navigation %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">Modifier un article</div>
+            <div class="card-body">
+                <form action="/admin/posts/update" method="post">
+                    <div class="form-group">
+                        <label for="">Titre du lien:</label>
+                        <input class="form-control" value="{{ datas['slug'] }}" id="{{ constant(Post ~ '::SLUG') }}" name="{{ constant(Post ~ '::SLUG') }}" type="text" aria-describedby="{{ constant(Post ~ '::SLUG') }}" placeholder="Nom du lien"/>
+                        <div class="alert-danger">
+                            {{ errors?errors['slug']:'' }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ constant(Post ~ '::TITLE') }}">Titre:</label>
+                        <input class="form-control" value="{{ datas['title'] }}" id="{{ constant(Post ~ '::TITLE') }}" name="{{ constant(Post ~ '::TITLE') }}" type="text" aria-describedby="{{ constant(Post ~ '::TITLE') }}" placeholder="Titre">
+                        <div class="alert-danger">
+                            {{ errors?errors['title']:'' }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ constant(Post ~ '::DESCRIPTION') }}">Description:</label>
+                        <textarea class="form-control" name="{{ constant(Post ~ '::DESCRIPTION') }}" id="{{ constant(Post ~ '::DESCRIPTION') }}" cols="30" rows="3">{{ datas['description'] }}</textarea>
+                        <div class="alert-danger">
+                            {{ errors?errors['description']:'' }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ constant(Post ~ '::CONTENT') }}">Contenu:</label>
+                        <textarea class="form-control" name="{{ constant(Post ~ '::CONTENT') }}" id="{{ constant(Post ~ '::CONTENT') }}" cols="30" rows="10">{{ datas['content'] }}</textarea>
+                        <div class="alert-danger">
+                            {{ errors?errors['content']:'' }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ constant(Post ~ '::STATUS') }}">Status:</label>
+                        <select class="form-control" name="{{ constant(Post ~ '::STATUS') }}" id="{{ constant(Post ~ '::STATUS') }}">
+                            <option value="{{ constant(Post ~ '::PENDING') }}" {{ datas['status'] is same as(constant(Post ~ '::PENDING'))?'selected':'' }}>{{ constant(Post ~ '::PENDING') }}</option>
+                            <option value="{{ constant(Post ~ '::PUBLISHED') }}" {{ datas['status'] is same as(constant(Post ~ '::PUBLISHED'))?'selected':'' }}>{{ constant(Post ~ '::PUBLISHED') }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ constant(Post ~ '::PUBLISH_AT') }}">Date de publication</label>
+                        <input class="form-control" value="{{ datas['publish_at'] }}" id="{{ constant(Post ~ '::PUBLISH_AT') }}" name="{{ constant(Post ~ '::PUBLISH_AT') }}" type="date" aria-describedby="" placeholder="">
+                        <div class="alert-danger">
+                            {{ errors?errors['publish_at']:'' }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-secondary">Mettre à jour</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
