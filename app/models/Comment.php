@@ -11,6 +11,7 @@ class Comment extends Model
     
     const PENDING = 'pending';
     const PUBLISHED = 'published';
+    const REFUSED = 'refused';
     
     const TITLE = 'title';
     const CONTENT = 'content';
