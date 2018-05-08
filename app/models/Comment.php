@@ -1,12 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bart
- * Date: 02/05/2018
- * Time: 15:21
- */
-
-namespace App\models;
+namespace App\Models;
 
 
 class Comment extends Model
