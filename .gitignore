@@ -1,13 +1,8 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
 /vendor/
-"config/Icon\r"
 .php_cs.cache
-app/Icon\r
-app/controllers/Icon\r
-app/database/Icon\r
-public/Icon\r
-config/Icon\r
+/config/DbConfig.php
 UserStories.md
 */Icon
 cache
