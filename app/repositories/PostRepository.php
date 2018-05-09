@@ -30,10 +30,22 @@ class PostRepository extends Repository implements IRepository
         return $stmt->fetchObject(Post::class);
     }
     
+    
+    public function getBySlug($slug)
+    {
+        $sqlStmt = 'SELECT * FROM posts WHERE slug = :slug';
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->execute([
+           ':slug' => $slug
+        ]);
+        
+        return $stmt->fetchObject(Post::class);
+    }
+    
     public function updatePost($data) {
         
         $data = array_merge($data, [
-            'create_at' => (new \DateTime('now'))->format('Y-m-d H:i:s')
+            'update_at' => (new \DateTime('now'))->format('Y-m-d H:i:s')
         ]);
     
         $sqlStmt = <<<BEGIN
@@ -43,9 +55,9 @@ class PostRepository extends Repository implements IRepository
           description = :description,
           content = :content,
           status = :status,
-          author_id = :author_id,
-          create_at = :create_at,
+          update_at = :update_at,
           publish_at = :publish_at
+          WHERE id = :id
 BEGIN;
     
         $stmt = $this->pdo->prepare($sqlStmt);
