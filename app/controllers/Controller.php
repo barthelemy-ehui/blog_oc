@@ -11,4 +11,8 @@ abstract class Controller
     {
         $this->app = $app;
     }
+    
+    protected function redirect($location) {
+        header('Location: ' . $location);
+    }
 }
