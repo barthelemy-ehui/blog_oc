@@ -11,6 +11,8 @@ use App\Repositories\RepositoryManager;
 use App\Repositories\UserRepository;
 use App\Routes\Route;
 use App\Routes\RouteSingleton;
+use App\Repositories\PostRepository;
+use App\Repositories\CommentRepository;
 
 $loader = new Twig_Loader_Filesystem('../app/views');
 $twig = new Twig_Environment($loader, array(
@@ -20,9 +22,14 @@ $twig = new Twig_Environment($loader, array(
 $pdo = DBSingleton::getInstance();
 $session = new Session();
 $userRepository = new UserRepository($pdo);
+$postRepository = new PostRepository($pdo);
+$commentRepository = new CommentRepository($pdo);
+
 $repoManager = new RepositoryManager();
 $repoManager->add([
-    'UserRepository' => $userRepository
+    'UserRepository' => $userRepository,
+    'PostRepository' => $postRepository,
+    'CommentRepository' => $commentRepository
 ]);
 
 $app = new App();
@@ -34,11 +41,9 @@ $app->add([
     'auth' => new Auth($session, $userRepository),
 ]);
 
-
 /** @var Route $route */
 $route = RouteSingleton::getInstance($app);
 $twig->addGlobal('route',$route);
-
 /**
  * Authentification
  */
