@@ -19,6 +19,7 @@ final class DBSingleton
             $config = require __DIR__.'/../../config/DbConfig.php';
             try{
                 static::$instance = new PDO($config['dsn'],$config['username'], $config['password']);
+                static::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             }catch(Exception $e){
                  printf('Something wrong has been happened : %s', $e->getMessage());
             }
