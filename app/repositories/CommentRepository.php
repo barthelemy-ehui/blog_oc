@@ -37,9 +37,9 @@ class CommentRepository extends Repository implements IRepository
     
         $sqlStmt = <<<BEGIN
             UPDATE comments SET
-            content = :content,
             status = :status,
-            post_id = :post_id
+            update_at = :update_at
+            WHERE id = :id
 BEGIN;
         
             $stmt = $this->pdo->prepare($sqlStmt);
@@ -51,19 +51,24 @@ BEGIN;
     public function insertNewComment($data) {
             
             $data = array_merge($data, [
-                'create_at' => (new \DateTime('now'))->format('Y-m-d H:i:s')
+                'create_at' => (new \DateTime('now'))->format('Y-m-d H:i:s'),
+                'status' => Comment::PENDING
             ]);
             
             $sqlStmt = <<<BEGIN
                 INSERT INTO comments
                 (
+                  title,
                   content,
                   status,
+                  email,
                   post_id,
                   create_id
                 ) VALUES (
+                  :title,
                   :content,
                   :status,
+                  :email,
                   :post_id,
                   :create_at
                 )
