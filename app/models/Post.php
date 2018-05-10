@@ -123,16 +123,17 @@ class Post extends Model
     /**
      * @return mixed
      */
-    public function getPublishedAt()
+    public function getPublishAt()
     {
-        return $this->published_at;
+        return $this->publish_at;
     }
     
     /**
-     * @param mixed $published_at
+     * @param mixed $publish_at
      */
-    public function setPublishedAt($published_at): void
+    public function setPublishAt($publish_at): void
     {
-        $this->published_at = $published_at;
+        $this->publish_at = $publish_at;
     }
+    
 }
