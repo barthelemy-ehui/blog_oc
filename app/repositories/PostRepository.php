@@ -13,7 +13,7 @@ class PostRepository extends Repository implements IRepository
         $stmt = $this->pdo->prepare($sqlStmt);
         $stmt->execute();
         return $stmt->fetchAll(
-            PDO::FETCH_CLASS,
+            \PDO::FETCH_CLASS,
             Post::class
             );
         
@@ -24,7 +24,7 @@ class PostRepository extends Repository implements IRepository
         $sqlStmt = 'SELECT * FROM posts WHERE id = :id';
         $stmt = $this->pdo->prepare($sqlStmt);
         $stmt->execute([
-           ':id' => $id
+            'id' => $id
         ]);
         
         return $stmt->fetchObject(Post::class);
@@ -73,24 +73,7 @@ BEGIN;
         ]);
         
         $sqlStmt = <<<BEGIN
-          INSERT INTO posts
-          (
-            slug,
-            title,
-            description,
-            content,
-            status,
-            author_id,
-            publish_at
-          ) VALUES (
-            :slug,
-            :title,
-            :description,
-            :content,
-            :status,
-            :author_id,
-            :publish_at
-          )
+          INSERT INTO posts (slug,title,description,content,status,author_id,publish_at,create_at) VALUES (:slug,:title,:description,:content,:status,:author_id,:publish_at,:create_at);
 BEGIN;
         
         $stmt = $this->pdo->prepare($sqlStmt);
