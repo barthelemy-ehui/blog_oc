@@ -14,6 +14,7 @@ class Comment extends Model
     protected $title;
     protected $content;
     protected $status;
+    protected $email;
     protected $post_id;
     
     const PENDING = 'pending';
@@ -23,10 +24,7 @@ class Comment extends Model
     const TITLE = 'title';
     const CONTENT = 'content';
     
-    const STATUS = [
-        self::PENDING,
-        self::PUBLISHED
-    ];
+    const STATUS = 'status';
     
     const POST_ID = 'post_id';
     
@@ -92,5 +90,21 @@ class Comment extends Model
     public function setPostId($post_id): void
     {
         $this->post_id = $post_id;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+    
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email): void
+    {
+        $this->email = $email;
     }
 }
