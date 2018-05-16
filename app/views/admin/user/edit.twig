@@ -1,0 +1,66 @@
+{% extends 'admin/layout.twig'%}
+{% block title %}Connexion{% endblock %}
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+{% block navigation %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+    <div class="container">
+    <div class="card card-register mx-auto mt-5">
+        <div class="card-header">Modifier l'utilisateur</div>
+        <div class="card-body">
+            <form action="/admin/register/update" method="post">
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="{{ constant(User ~ '::FIRSTNAME') }}">Prenom</label>
+                            <input class="form-control" id="{{ constant(User ~ '::FIRSTNAME') }}" value="{{ errors?errors['datas']['firstname']:user.firstname }}" name="{{ constant(User ~ '::FIRSTNAME') }}" type="text" aria-describedby="nameHelp" placeholder="Prénom">
+                            <div class="alert-danger">
+                                {{ errors['errors']['firstname'] }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ constant(User ~ '::LASTNAME') }}">Nom</label>
+                            <input class="form-control" id="{{ constant(User ~ '::LASTNAME') }}" value="{{ errors?errors['datas']['lastname']:user.lastname }}" name="{{ constant(User ~ '::LASTNAME') }}" type="text" aria-describedby="nameHelp" placeholder="Nom">
+                            <div class="alert-danger">
+                                {{ errors['errors']['lastname'] }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{ constant(User ~ '::EMAIL') }}">Email</label>
+                    <input class="form-control" id="{{ constant(User ~ '::EMAIL') }}" value="{{ errors?errors['datas']['email']:user.email }}" name="{{ constant(User ~ '::EMAIL') }}" type="email" aria-describedby="emailHelp" placeholder="Email">
+                    <div class="alert-danger">
+                        {{ errors['errors']['email'] }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="{{ constant(User ~ '::PASSWORD') }}">Mot de passe</label>
+                            <input class="form-control" id="{{ constant(User ~ '::PASSWORD') }}" value="{{ errors['datas']['password'] }}" name="{{ constant(User ~ '::PASSWORD') }}" type="password" placeholder="Mot de passe">
+                            <div class="alert-danger">
+                                {{ errors['errors']['password'] }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ constant(User ~ '::PASSwORDCONFIRM') }}">Confirmer le mot de passe</label>
+                            <input class="form-control" id="{{ constant(User ~ '::PASSwORDCONFIRM') }}" value="{{ errors['datas']['passwordConfirm'] }}" name="{{ constant(User ~ '::PASSwORDCONFIRM') }}" type="password" placeholder="Confirmer mot de passe">
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="id" value="{{ user.id }}">
+                <button class="btn btn-primary btn-block" type="submit">Mettre à jour</button>
+            </form>
+            <!--
+            <div class="text-center">
+                <a class="d-block small mt-3" href="login.html">Login Page</a>
+                <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+            </div>
+            -->
+        </div>
+    </div>
+{% endblock %}
