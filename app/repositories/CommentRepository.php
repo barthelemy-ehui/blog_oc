@@ -3,18 +3,37 @@ namespace App\Repositories;
 
 
 use App\models\Comment;
+use App\Models\Post;
 
 class CommentRepository extends Repository implements IRepository
 {
     
     public function getAll()
     {
-        $sqlStmt = 'SELECT * FROM comments';
-        $stmt = $this->prepare($sqlStmt);
+        $sqlStmt = <<<BEGIN
+        SELECT
+          c.id,
+          c.title,
+          c.content,
+          c.status,
+          c.email,
+          c.post_id,
+          c.create_at,
+          c.update_at,
+          p.slug
+          FROM comments as c
+          JOIN
+          posts as p
+          ON c.post_id = p.id
+          ORDER BY c.create_at
+          DESC
+BEGIN;
+        
+        $stmt = $this->pdo->prepare($sqlStmt);
         $stmt->execute();
         
         return $stmt->fetchAll(
-          PDO::FETCH_CLASS,
+          \PDO::FETCH_CLASS,
           Comment::class
         );
     }
@@ -28,6 +47,21 @@ class CommentRepository extends Repository implements IRepository
         ]);
         
         return $stmt->fetchObject(Comment::class);
+    }
+    
+    public function getCommentsByPost($postId)
+    {
+        $sqlStmt = 'SELECT * FROM comments WHERE post_id = :post_id AND status = :status';
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->execute([
+            ':post_id' => $postId,
+            ':status' => Comment::PUBLISHED
+        ]);
+        
+        return $stmt->fetchAll(
+            \PDO::FETCH_CLASS,
+            Post::class
+        );
     }
     
     public function updateComment($data){
@@ -63,7 +97,7 @@ BEGIN;
                   status,
                   email,
                   post_id,
-                  create_id
+                  create_at
                 ) VALUES (
                   :title,
                   :content,
@@ -74,7 +108,8 @@ BEGIN;
                 )
 BEGIN;
 
-            $stmt = $this->pdo->prepare($data);
+
+            $stmt = $this->pdo->prepare($sqlStmt);
             $stmt->execute($data);
             
             return $this->getById($this->pdo->lastInsertId());
