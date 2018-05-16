@@ -26,6 +26,43 @@ class PostController extends Controller
     
     /**
      * http_method=get
+     */
+    public function indexWithPagination($pagination){
+    
+    
+        $limit = (int) $pagination['limit'];
+        $offset = (int) $pagination['offset'];
+
+        if(!$limit && !$offset) {
+            throw new NaNException();
+        }
+        
+        $oldOffset = $offset;
+        $offset--;
+        
+        $posts = $this->app->load('repoManager')
+            ->getInstance('PostRepository')
+            ->getAllByPagination($offset, $limit);
+    
+        $postCounts = $this->app->load('repoManager')
+            ->getInstance('PostRepository')
+            ->countAll();
+    
+        $paginationCounts = floor($postCounts / $limit);
+        if($postCounts % $limit !== 0) {
+            $paginationCounts++;
+        }
+        
+        
+        echo $this->app->load('twig')->render('front/post/index.twig',[
+           'posts' => $posts,
+           'paginationCounts' => $paginationCounts,
+           'offset' => $oldOffset
+        ]);
+    }
+    
+    /**
+     * http_method=get
      * auth=admin
      */
     public function add(){
@@ -160,9 +197,9 @@ class PostController extends Controller
     }
     
     /**
-     * http_method=get
+     *http_method=get
      */
-    public function getPostBySlug($slug) {
+    public function getPostBySlug($postSlug) {
     
         $errors = [];
         $session = $this->app->load('session');
@@ -173,18 +210,26 @@ class PostController extends Controller
         
         $post =  $this->app->load('repoManager')
             ->getInstance('PostRepository')
-            ->getById($slug);
+            ->getBySlug($postSlug['slug']);
         
-        echo $this->app->load('twig')->render('',[
+        $comments = $this->app->load('repoManager')
+            ->getInstance('CommentRepository')
+            ->getCommentsByPost($post->getId());
+        
+        
+        echo $this->app->load('twig')->render('front/post/detail.twig',[
             'post' => $post,
+            'comments' => $comments,
             'errors' => $errors
         ]);
     }
     
     public function getPostById($id) {
+        
         $post =  $this->app->load('repoManager')
             ->getInstance('PostRepository')
             ->getById($id);
         
     }
+    
 }
