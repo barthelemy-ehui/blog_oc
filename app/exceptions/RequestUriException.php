@@ -1,7 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bart
- * Date: 16/05/2018
- * Time: 16:41
- */
+namespace App\exceptions;
+
+
+class RequestUriException extends \Exception
+{
+
+}
