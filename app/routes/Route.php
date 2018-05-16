@@ -5,6 +5,7 @@ use App\App;
 use App\Auths\Auth;
 use App\exceptions\BadUrlException;
 use App\exceptions\NotLoginException;
+use App\exceptions\RequestUriException;
 use App\exceptions\UnrecognizeHttpMethodException;
 use App\exceptions\UnrecognizeMethodException;
 
@@ -28,12 +29,22 @@ class Route
     
     private $app;
     
+    
+    private $stackUrls = [];
+    
     public function __construct(App $app)
     {
         $this->app = $app;
     }
     
-    public function get($uri, $controller)
+    public function get($uri, $controller){
+        $this->stacksOfUrls[$uri] = [
+            'type' => 'getUrl',
+            'controller' => $controller
+        ];
+    }
+    
+    private function getUrl($uri, $controller)
     {
         if ($this->checkPathInfo($uri, static::GET_METHOD)) {
             $urlData = $this->fetchUrlData($uri);
@@ -43,7 +54,14 @@ class Route
         return $this;
     }
     
-    public function post($uri, $controller)
+    public function post($uri, $controller) {
+        $this->stacksOfUrls[$uri] = [
+            'type' => 'postUrl',
+            'controller' => $controller
+        ];
+    }
+    
+    private function postUrl($uri, $controller)
     {
         if ($this->checkPathInfo($uri, static::POST_METHOD)) {
             $this->callController($uri, $controller);
@@ -51,8 +69,15 @@ class Route
         $this->currentUri = $uri;
         return $this;
     }
-    
-    public function all($uri, $controllerName){
+
+    public function all($uri, $controllerName) {
+        $this->stacksOfUrls[$uri] = [
+            'type' => 'allUrl',
+            'controller' => $controllerName
+        ];
+    }
+
+    private function allUrl($uri, $controllerName){
         $namespacePath = 'App\\Controllers\\';
         $controller = $namespacePath . $controllerName;
         $controllerReflection = new \ReflectionClass($controller);
@@ -90,21 +115,26 @@ class Route
     {
         if(isset($_SERVER['REQUEST_URI'])) {
             $clientUrl = $_SERVER['REQUEST_URI'];
-           
-            // s'y a pregmatch, go, s'y a pas de preg_match on verifie si c'est identitique
-            $pattern = '/\/?\{[[:alnum:]]+\}\/?/';
-            preg_match($pattern, $routeUrl, $matches);
-            $routeUrlReplaced = $routeUrl;
-            $strPosCheck = $clientUrl === $routeUrl;
-            if($matches) {
-                $routeUrlReplaced = preg_replace($pattern,'',$routeUrl);
-                $strPosCheck = strpos($clientUrl,$routeUrlReplaced);
+            $isHttpMethod = strtolower($http_method) === strtolower($_SERVER['REQUEST_METHOD']);
+
+            if($clientUrl == $routeUrl && $isHttpMethod) {
+                return true;
             }
             
-            return
-                $strPosCheck !== false
-                &&
-                strtolower($http_method) === strtolower($_SERVER['REQUEST_METHOD']);
+            $routeUrlExplode = ['/'];
+            if($routeUrl !== '/') {
+                $routeUrlresult = preg_replace('/\/?\{(\w+)\}+\/?/', '', $routeUrl);
+                $routeUrlExplode = array_filter(explode('/', $routeUrlresult), function ($v) {
+                    return $v !== '';
+                });
+            }
+            
+            $clientUrlExplode = array_filter(explode('/', $clientUrl), function($v){ return $v !== ''; });
+            $clientUrlSpliced = array_splice($clientUrlExplode,0,count($routeUrlExplode));
+            
+            if(implode('/',$routeUrlExplode) === implode('/',$clientUrlSpliced) && $isHttpMethod) {
+                return true;
+            }
         }
         return false;
     }
@@ -127,7 +157,6 @@ class Route
         $pattern = '/{([a-z]+)}/';
         preg_match_all($pattern, $uri, $matches);
         
-
         $routeUrlExplode = explode('/', $uri);
         $clientUrlExplode = explode('/', $_SERVER['REQUEST_URI']);
         $urlUserData = array_values(array_diff($clientUrlExplode,$routeUrlExplode));
@@ -236,5 +265,48 @@ class Route
         if($matches && !$this->app->load('session')->has(Auth::UserAuthentifiedKeySession)) {
            throw new NotLoginException();
         }
+    }
+    
+    public function run(){
+        
+        if(!isset($_SERVER['REQUEST_URI'])){
+            throw new RequestUriException();
+        }
+
+        $requestUri = $_SERVER['REQUEST_URI'];
+        $uriExplode = array_filter(explode('/',$requestUri), function($v) {
+            return $v !== '';
+        });
+        
+        $urlKeysArchive = array_keys($this->stacksOfUrls);
+        
+        $urlKeysWithValueKey = [];
+        $urlKeys = array_map(function($key) use (&$urlKeysWithValueKey) {
+            $toReturnLater =  preg_replace('/\/?\{(\w+)\}+\/?/', '', $key);
+            $urlKeysWithValueKey[$toReturnLater] = $key;
+            return $toReturnLater;
+        }, $urlKeysArchive);
+        
+        $urlFind = $this->recursive($uriExplode, $urlKeys);
+        
+        
+        
+        $clientUri = $urlKeysWithValueKey[$urlFind];
+        $st = $this->stacksOfUrls[$clientUri];
+        $this->{$st['type']}($clientUri,$st['controller']);
+    }
+    
+    private function recursive($arr, $keys){
+        
+        $urlToCheck = '/' . implode('/',$arr);
+        if(array_key_exists($urlToCheck, array_flip($keys))){
+            return $urlToCheck;
+        }
+        
+        if(count($arr)==0){
+            return false;
+        }
+        array_pop($arr);
+        return $this->recursive($arr, $keys);
     }
 }
