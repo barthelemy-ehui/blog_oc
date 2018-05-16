@@ -29,7 +29,7 @@ class CommentController extends Controller
         $validator->addRule([
            'title' => Validator::REQUIRED,
            'content' => Validator::REQUIRED,
-           'email' => Validator::REQUIRED,
+           'email' => Validator::EMAIL,
            'post_id' => Validator::REQUIRED,
            'slug' => Validator::REQUIRED,
         ]);
@@ -40,10 +40,30 @@ class CommentController extends Controller
         if(count($errors['errors'])>0) {
             $this->app->load('session')
                  ->set(Validator::class, $errors);
-            $this->redirect('/admin/posts/getPostBySlug/' + $errors['datas']['slug']);
+            
+            $this->redirect('/post/' . $errors['datas']['slug']);
             return;
         }
-        $this->redirect('/admin/posts/getPostBySlug/' + $data['slug']);
+
+        // only need slug for the redirection
+        $slug = $data['slug'];
+        unset($data['slug']);
+        
+        $cmt = $this->app->load('repoManager')
+            ->getInstance('CommentRepository')
+            ->insertNewComment($data);
+    
+    
+        $name = "Unknown";
+        $email = $cmt->getEmail();
+        $recipient = "b.ehuinda@gmail.com";
+        $mail_body = $cmt->getContent();
+        $subject = $cmt->getTitle();
+        $header = "From: ". $name . " <" . $email . ">\r\n";
+    
+        mail($recipient, $subject, $mail_body, $header);
+        
+        $this->redirect('/post/' . $slug);
     }
     
     
