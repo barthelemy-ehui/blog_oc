@@ -19,6 +19,30 @@ class PostRepository extends Repository implements IRepository
         
     }
     
+    public function getAllByPagination($offset, $limit)
+    {
+        
+        $sqlStmt = 'SELECT * FROM posts LIMIT :offset, :limit';
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->bindValue(':offset',$offset*$limit,\PDO::PARAM_INT);
+        $stmt->bindValue(':limit',$limit,\PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(
+            \PDO::FETCH_CLASS,
+            Post::class
+            );
+    }
+    
+    public function countAll(){
+        
+        $sqlStmt = 'SELECT count(*) FROM posts';
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->execute();
+        
+        return $stmt->fetch(\PDO::FETCH_NUM)[0];
+    }
+    
     public function getById($id)
     {
         $sqlStmt = 'SELECT * FROM posts WHERE id = :id';
