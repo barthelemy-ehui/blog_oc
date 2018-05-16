@@ -175,7 +175,6 @@ class PostController extends Controller
             ->getInstance('PostRepository')
             ->getById($slug);
         
-        //todo: à mettre fichier qui permettra d'afficher l'article
         echo $this->app->load('twig')->render('',[
             'post' => $post,
             'errors' => $errors
@@ -187,6 +186,5 @@ class PostController extends Controller
             ->getInstance('PostRepository')
             ->getById($id);
         
-        // todo: si je souhaite voir l'article complet avec les commentaires, à faire en dernier s'il n'ya pas d'urgence
     }
 }

@@ -18,6 +18,8 @@ $loader = new Twig_Loader_Filesystem('../app/views');
 $twig = new Twig_Environment($loader, array(
 ));
 
+$twig->addExtension(new Twig_Extensions_Extension_Text());
+
 $pdo = DBSingleton::getInstance();
 $session = new Session();
 $userRepository = new UserRepository($pdo);
@@ -43,16 +45,15 @@ $app->add([
 /** @var Route $route */
 $route = RouteSingleton::getInstance($app);
 $twig->addGlobal('route',$route);
-/**
- * Authentification
- */
-
 
 /**
  * front-end route
  */
-
-$route->all('/', 'HomeController');
+$route->get('/', 'HomeController::index');
+$route->get('/blog/{offset}/{limit}','PostController::indexWithPagination');
+$route->get('/post/{slug}','PostController::getPostBySlug');
+$route->post('/comment/store', 'CommentController::store');
+$route->post('/send/email','EmailController::send');
 
 /**
  * Admin route
@@ -63,6 +64,8 @@ $route->all('/admin/register', 'RegisterController');
 $route->all('/admin/posts', 'PostController');
 $route->all('/admin/comments', 'CommentController');
 
+
+$route->run();
 /**
  * Authentification
  */
