@@ -56,6 +56,19 @@ class UserRepository extends Repository implements IRepositoryInterface
         return $stmt->fetchObject(User::class);
     }
     
+    public function deleteUserById($id) {
+    
+        $sqlStmt = <<<BEGIN
+            DELETE FROM users
+            WHERE id = :id
+BEGIN;
+        
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->execute([
+            'id' => $id
+        ]);
+    }
+    
     public function insertNewUser($data)
     {
         $data = array_merge($data, [
@@ -67,5 +80,27 @@ class UserRepository extends Repository implements IRepositoryInterface
         $stmt->execute($data);
         
         return $this->getById($this->pdo->lastInsertId());
+    }
+    
+    public function updateUser($data) {
+        
+        $data = array_merge($data, [
+           'update_at' => (new \DateTime('now'))->format('Y-m-d H:i:s')
+        ]);
+
+        $sqlStmt = <<<BEGIN
+                UPDATE users SET
+                firstname = :firstname,
+                lastname = :lastname,
+                email = :email,
+                password = :password,
+                update_at = :update_at
+                WHERE id = :id
+BEGIN;
+
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $user = $stmt->execute($data);
+
+        return $user;
     }
 }
