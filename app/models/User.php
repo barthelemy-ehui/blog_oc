@@ -7,8 +7,14 @@ class User extends Model
     protected $lastname;
     protected $email;
     protected $password;
-    protected $created_at;
+    protected $create_at;
     protected $update_at;
+    
+    const FIRSTNAME = 'firstname';
+    const LASTNAME = 'lastname';
+    const EMAIL = 'email';
+    const PASSWORD = 'password';
+    const PASSwORDCONFIRM = 'passwordConfirm';
     
     public function nameMaj(){
         return strtoupper($this->firstname);
@@ -44,6 +50,38 @@ class User extends Model
     public function getPassword()
     {
         return $this->password;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCreateAt()
+    {
+        return $this->create_at;
+    }
+    
+    /**
+     * @param mixed $create_at
+     */
+    public function setCreateAt($create_at): void
+    {
+        $this->create_at = $create_at;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getUpdateAt()
+    {
+        return $this->update_at;
+    }
+    
+    /**
+     * @param mixed $update_at
+     */
+    public function setUpdateAt($update_at): void
+    {
+        $this->update_at = $update_at;
     }
     
 }
