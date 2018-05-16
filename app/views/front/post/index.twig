@@ -1,0 +1,33 @@
+{% extends 'front/layout.twig'%}
+{% block title %}Connexion{% endblock %}
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    {% include 'front/navigation.twig' %}
+
+    <div class="ccontainer">
+        <div class="row">
+            <div class="col-lg-8 mx-auto spaceFromMargin">
+                <h3>Articles</h3>
+                {% for post in posts %}
+                    <a href="/post/{{ post.slug }}"><h3>{{ post.title }}</h3></a>
+                    <div>
+                        {{ post.content|truncate(300) }}
+                    </div>
+                {% endfor %}
+                <br/>
+                <nav aria-label="...">
+                    <ul class="pagination pagination-sm">
+                        {% for paginationCount in range(1, paginationCounts) %}
+                            <li class="page-item {{ offset==paginationCount?'disabled':'' }}"><a class="page-link" href="/blog/{{ paginationCount }}/5">{{ paginationCount }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+    </div>
+    {% include 'front/footer.twig' %}
+{% endblock %}
