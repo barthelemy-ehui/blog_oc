@@ -14,7 +14,7 @@
                 {% for post in posts %}
                     <a href="/post/{{ post.slug }}"><h3>{{ post.title }}</h3></a>
                     <div>
-                        {{ post.content|truncate(300) }}
+                        {{ post.content|striptags|truncate(300, true, '...') }}
                     </div>
                 {% endfor %}
                 <br/>
