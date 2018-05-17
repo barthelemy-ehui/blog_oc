@@ -10,7 +10,9 @@
     <div class="ccontainer">
         <div class="row">
             <div class="col-lg-8 mx-auto spaceFromMargin">
-                {{ post.content }}
+
+                <h4>{{ post.title }}</h4>
+                {{ post.content|raw }}
                 <hr/>
                 <!-- afficher les commentaires -->
                 {% for comment in comments %}
