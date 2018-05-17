@@ -22,10 +22,11 @@ class PostRepository extends Repository implements IRepository
     public function getAllByPagination($offset, $limit)
     {
         
-        $sqlStmt = 'SELECT * FROM posts LIMIT :offset, :limit';
+        $sqlStmt = 'SELECT * FROM posts WHERE status = :status LIMIT :offset, :limit';
         $stmt = $this->pdo->prepare($sqlStmt);
         $stmt->bindValue(':offset',$offset*$limit,\PDO::PARAM_INT);
         $stmt->bindValue(':limit',$limit,\PDO::PARAM_INT);
+        $stmt->bindValue(':status', POST::PUBLISHED,\PDO::PARAM_STR);
         $stmt->execute();
         
         return $stmt->fetchAll(
@@ -36,8 +37,9 @@ class PostRepository extends Repository implements IRepository
     
     public function countAll(){
         
-        $sqlStmt = 'SELECT count(*) FROM posts';
+        $sqlStmt = 'SELECT count(*) FROM posts WHERE status = :status';
         $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->bindValue(':status', POST::PUBLISHED, \PDO::PARAM_STR);
         $stmt->execute();
         
         return $stmt->fetch(\PDO::FETCH_NUM)[0];
