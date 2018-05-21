@@ -14,7 +14,7 @@ class User extends Model
     const LASTNAME = 'lastname';
     const EMAIL = 'email';
     const PASSWORD = 'password';
-    const PASSwORDCONFIRM = 'passwordConfirm';
+    const PASSWORDCONFIRM = 'passwordConfirm';
     
     public function nameMaj(){
         return strtoupper($this->firstname);

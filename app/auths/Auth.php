@@ -56,9 +56,4 @@ class Auth
     public function logout(){
         $this->session->clear(self::USERAUTHENTIFIEDKEYSESSION);
     }
-    
-    public function IsRole($role)
-    {
-        
-    }
 }
