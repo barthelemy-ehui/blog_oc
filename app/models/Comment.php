@@ -28,6 +28,8 @@ class Comment extends Model
     
     const POST_ID = 'post_id';
     
+    const IS_SENT = 'isSent';
+    
     /**
      * @return mixed
      */

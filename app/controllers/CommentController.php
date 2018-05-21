@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\models\Comment;
 use App\Validation\Validator;
 
 class CommentController extends Controller
@@ -53,7 +54,9 @@ class CommentController extends Controller
             ->getInstance('CommentRepository')
             ->insertNewComment($data);
     
-    
+        $this->app->load('session')
+            ->set(Comment::IS_SENT, true);
+        
         $name = "Unknown";
         $email = $cmt->getEmail();
         $recipient = "b.ehuinda@gmail.com";
