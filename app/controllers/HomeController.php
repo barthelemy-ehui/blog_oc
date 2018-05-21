@@ -15,6 +15,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        echo $this->app->load('twig')->render('front/index.twig');
+        $latestThreePosts = $this->app->load('repoManager')
+        ->getInstance('PostRepository')
+        ->getTheTreeLatestPosts();
+        
+        echo $this->app->load('twig')->render('front/index.twig',[
+            'posts' => $latestThreePosts
+        ]);
     }
 }
