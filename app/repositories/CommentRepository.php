@@ -126,4 +126,12 @@ BEGIN;
                ':id' => $id
             ]);
     }
+    
+    function getCount(){
+        $sqlStmt = 'SELECT count(*) FROM comments';
+        $stmt = $this->pdo->prepare($sqlStmt);
+        $stmt->execute();
+        
+        return $stmt->fetch(\PDO::FETCH_NUM)[0];
+    }
 }
