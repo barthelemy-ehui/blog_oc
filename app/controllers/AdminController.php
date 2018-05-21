@@ -9,7 +9,19 @@ class AdminController extends Controller
      * auth=admin
      */
     public function index() {
-        echo $this->app->load('twig')->render('admin/index.twig');
+        
+        $articlesCount = $this->app->load('repoManager')
+        ->getInstance('PostRepository')
+        ->getCount();
+        
+        $commentsCount = $this->app->load('repoManager')
+        ->getInstance('CommentRepository')
+        ->getCount();
+        
+        echo $this->app->load('twig')->render('admin/index.twig',[
+            'commentsCount' => $commentsCount,
+            'articlesCount' => $articlesCount
+        ]);
     }
     
     /**
