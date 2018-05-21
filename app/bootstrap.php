@@ -47,6 +47,10 @@ $app->add([
 $route = RouteSingleton::getInstance($app);
 $twig->addGlobal('route',$route);
 
+if($session->has(Auth::UserAuthentifiedKeySession)){
+    $twig->addGlobal('user',$session->get(Auth::UserAuthentifiedKeySession));
+}
+
 /**
  * front-end route
  */
