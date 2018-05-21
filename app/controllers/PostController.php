@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Auths\Auth;
 use App\Exceptions\NaNException;
+use App\models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use App\Validation\Validator;
@@ -208,6 +209,12 @@ class PostController extends Controller
             $session->clear(Validator::class);
         }
         
+        $isSent = false;
+        if($session->has(Comment::IS_SENT)){
+            $isSent = $session->get(Comment::IS_SENT);
+            $session->clear(Comment::IS_SENT);
+        }
+        
         $post =  $this->app->load('repoManager')
             ->getInstance('PostRepository')
             ->getBySlug($postSlug['slug']);
@@ -216,11 +223,16 @@ class PostController extends Controller
             ->getInstance('CommentRepository')
             ->getCommentsByPost($post->getId());
         
+        $author = $this->app->load('repoManager')
+            ->getInstance('UserRepository')
+            ->getById($post->getAuthorId());
         
         echo $this->app->load('twig')->render('front/post/detail.twig',[
             'post' => $post,
             'comments' => $comments,
-            'errors' => $errors
+            'errors' => $errors,
+            'author' => $author,
+            'isSent' => $isSent,
         ]);
     }
     

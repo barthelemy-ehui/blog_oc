@@ -1,25 +1,73 @@
 {% extends 'front/layout.twig'%}
-{% block title %}Connexion{% endblock %}
 {% block head %}
     {{ parent() }}
+    <title>{{ post.title }}</title>
+    <meta name="description" content="{{ post.description }}" />
+    <style type="text/css">
+        .bg-secondary {
+            padding: 20px;
+        }
+
+        span i{
+            border: solid black;
+            border-width: 0 3px 3px 0;
+            display: inline-block;
+            padding: 3px;
+        }
+
+        .right{
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
     {% include 'front/navigation.twig' %}
-
     <div class="ccontainer">
         <div class="row">
             <div class="col-lg-8 mx-auto spaceFromMargin">
-
-                <h4>{{ post.title }}</h4>
-                {{ post.content|raw }}
-                <hr/>
-                <!-- afficher les commentaires -->
-                {% for comment in comments %}
-                    <span>{{ comment.title }}</span>
-                    <p>{{ comment.content }}</p>
-                {% endfor %}
-
+                <section>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="pull-right">
+                                <strong>Date de modification:</strong>
+                                <span>{{ post.updateat|date('d/m/Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4 class="title">{{ post.title }}</h4>
+                            <div style="margin-bottom: 10px;">
+                                {{ post.description }}
+                            </div>
+                            <div>
+                                {{ post.content|raw }}
+                            </div>
+                            <div>
+                                <strong>Auteur:</strong>
+                                <span>{{ author.getFirstname() }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div>
+                    {% if comments|length>0  %}
+                        {% for comment in comments %}
+                            <span><i class="arrow right"></i> &nbsp;{{ comment.title }}</span>
+                            <p>{{ comment.content }}</p>
+                            <hr/>
+                        {% endfor %}
+                    {% else %}
+                        Aucun commentaire
+                    {% endif %}
+                </div>
+                {% if isSent %}
+                    <div class="bg-secondary text-white">
+                        Votre commentaire est en attente de validation
+                    </div>
+                {% endif %}
                 <form action="/comment/store" method="post">
                     <div class="form-group">
                         <label for="title">Titre*</label>
