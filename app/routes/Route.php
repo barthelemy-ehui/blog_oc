@@ -3,73 +3,71 @@ namespace App\Routes;
 
 use App\App;
 use App\Auths\Auth;
-use App\exceptions\BadUrlException;
 use App\exceptions\NotLoginException;
 use App\exceptions\RequestUriException;
 use App\exceptions\UnrecognizeHttpMethodException;
-use App\exceptions\UnrecognizeMethodException;
 
 class Route
 {
-    const GET_METHOD  = 'get';
-    const POST_METHOD  = 'post';
-    const DELETE_METHOD  = 'delete';
-    const PUT_METHOD  = 'put';
-    const METHODS = [
+    public const GET_METHOD  = 'get';
+    public const POST_METHOD  = 'post';
+    public const DELETE_METHOD  = 'delete';
+    public const PUT_METHOD  = 'put';
+    public const METHODS = [
         self::GET_METHOD,
         self::POST_METHOD,
         self::DELETE_METHOD,
         self::PUT_METHOD
     ];
-    const HTTP_METHOD = 'http_method';
+    public const HTTP_METHOD = 'http_method';
     
     private $stacksOfUrls = [];
 
     private $app;
-    
-    
-    private $stackUrls = [];
     
     public function __construct(App $app)
     {
         $this->app = $app;
     }
     
-    public function get($uri, $controller){
+    public function get($uri, $controller): void
+    {
         $this->stacksOfUrls[$uri] = [
             'type' => 'getUrl',
             'controller' => $controller
         ];
     }
     
-    private function getUrl($uri, $controller)
+    private function getUrl($uri, $controller): void
     {
         if ($this->checkPathInfo($uri, static::GET_METHOD)) {
             $urlData = $this->fetchUrlData($uri);
-            $this->callController($uri,$controller,$urlData);
+            $this->callController($controller,$urlData);
             return;
         }
         $this->returnErrorPage();
     }
     
-    public function post($uri, $controller) {
+    public function post($uri, $controller): void
+    {
         $this->stacksOfUrls[$uri] = [
             'type' => 'postUrl',
             'controller' => $controller
         ];
     }
     
-    private function postUrl($uri, $controller)
+    private function postUrl($uri, $controller): void
     {
         if ($this->checkPathInfo($uri, static::POST_METHOD)) {
-            $this->callController($uri, $controller);
+            $this->callController($controller);
             return;
         }
         
         $this->returnErrorPage();
     }
 
-    public function all($uri, $controllerName) {
+    public function all($uri, $controllerName): void
+    {
         $this->stacksOfUrls[$uri] = [
             'type' => 'allUrl',
             'controller' => $controllerName
@@ -108,7 +106,7 @@ class Route
         $this->returnErrorPage();
     }
     
-    private function checkPathInfo($routeUrl, $http_method)
+    private function checkPathInfo($routeUrl, $http_method): bool
     {
         if(isset($_SERVER['REQUEST_URI'])) {
             $clientUrl = $_SERVER['REQUEST_URI'];
@@ -136,9 +134,9 @@ class Route
         return false;
     }
     
-    private  function callController($uri, $controllerPath, $methodValue = [])
+    private  function callController($controllerPath, $methodValue = []): void
     {
-        list($controllerName,$methodName) = explode('::',$controllerPath);
+        [$controllerName,$methodName] = explode('::',$controllerPath);
         $namespacePath = 'App\\Controllers\\';
         $controller = $namespacePath . $controllerName;
         $this->checkForAuthentification($controllerName, $methodName);
@@ -149,7 +147,7 @@ class Route
         }
     }
     
-    private function fetchUrlData($uri)
+    private function fetchUrlData($uri): array
     {
         $pattern = '/{([a-z]+)}/';
         preg_match_all($pattern, $uri, $matches);
@@ -200,7 +198,7 @@ class Route
         return strtolower($methodName);
     }
     
-    private function checkForHttpMethod($getDocComments)
+    private function checkForHttpMethod($getDocComments): bool
     {
         $commentsWildcardStripOut = trim(preg_replace('/(\*|\/)+/','', $getDocComments));
         
@@ -219,7 +217,7 @@ class Route
         return $httpMethodAsked === $userClientHttpMethod;
     }
     
-    private function fetchUrlDataAll($uri)
+    private function fetchUrlDataAll($uri): array
     {
         $userClientUrl = $_SERVER['REQUEST_URI'];
 
@@ -238,7 +236,8 @@ class Route
         return $urlValues;
     }
     
-    private function checkForAuthentification($controllerName, $methodName) {
+    private function checkForAuthentification($controllerName, $methodName): void
+    {
 
         $namespacePath = 'App\\Controllers\\';
         $controller = $namespacePath . $controllerName;
@@ -252,7 +251,8 @@ class Route
         }
     }
     
-    public function run(){
+    public function run(): void
+    {
         
         if(!isset($_SERVER['REQUEST_URI'])){
             throw new RequestUriException();
@@ -295,7 +295,8 @@ class Route
         return $this->recursive($arr, $keys);
     }
     
-    private function returnErrorPage() {
+    private function returnErrorPage(): void
+    {
         die('La page que vous cherchez n\'existe pas ou a été supprimée. Veuillez contacter l\'administrateur du site');
     }
 }

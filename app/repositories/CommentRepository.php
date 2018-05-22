@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories;
 
-
 use App\models\Comment;
 use App\Models\Post;
 
@@ -77,9 +76,7 @@ BEGIN;
 BEGIN;
         
             $stmt = $this->pdo->prepare($sqlStmt);
-            $comment = $stmt->execute($data);
-            
-            return $comment;
+        return $stmt->execute($data);
     }
     
     public function insertNewComment($data) {

@@ -5,10 +5,10 @@ use App\Exceptions\RuleNotFoundException;
 
 class Validator
 {
-    const REQUIRED = 'required';
-    const EMAIL = 'email';
-    const REQUIRED_EMAIL = 'required|email';
-    const REQUIRED_PASSWORD_COMPARE = 'required|compare';
+    public const REQUIRED = 'required';
+    public const EMAIL = 'email';
+    public const REQUIRED_EMAIL = 'required|email';
+    public const REQUIRED_PASSWORD_COMPARE = 'required|compare';
     
     private $secondPasswordFieldName;
     
@@ -20,9 +20,9 @@ class Validator
     
     private $userInputDatas = [];
     
-    const HTTP_POST_METHOD = 'post';
+    public const HTTP_POST_METHOD = 'post';
     
-    public function validate($type = 'post')
+    public function validate($type = 'post'): array
     {
         if($type === self::HTTP_POST_METHOD) {
             $datas = array_keys($this->rules);
@@ -45,11 +45,13 @@ class Validator
         return $this->datas;
     }
     
-    public function getErrors(){
+    public function getErrors(): array
+    {
         return ['errors' => $this->errors, 'datas' => $this->userInputDatas ];
     }
     
-    public function addRule($rules){
+    public function addRule($rules): void
+    {
         if(!is_array($rules)){
             throw new IsNotArrayException();
         }
@@ -66,7 +68,7 @@ class Validator
         return $messages[$key];
     }
     
-    private function getValidationsOption($ruleName)
+    private function getValidationsOption($ruleName): array
     {
         $rulesOptions = [];
             switch($ruleName){
@@ -96,7 +98,8 @@ class Validator
         return $rulesOptions;
     }
     
-    public function addPasswordToCompare($fieldName) {
+    public function addPasswordToCompare($fieldName): void
+    {
         $this->secondPasswordFieldName = $fieldName;
     }
     

@@ -13,21 +13,24 @@ class RegisterController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function index() {
+    public function index(): void
+    {
         echo $this->app->load('twig')->render('admin/auth/register.twig');
     }
     
     /**
      * http_method=get
      */
-    public function connect() {
+    public function connect(): void
+    {
         echo $this->app->load('twig')->render('admin/auth/connect.twig');
     }
     
     /**
      * http_method=post
      */
-    public function store() {
+    public function store(): void
+    {
 
         $validator = new Validator();
         $validator->addPasswordToCompare('passwordConfirm');
@@ -62,7 +65,8 @@ class RegisterController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function edit($id){
+    public function edit($id): void
+    {
         
         if(!(int) $id[0]) {
            throw new NaNException();
@@ -91,7 +95,8 @@ class RegisterController extends Controller
      * http_method=post
      * auth=admin
      */
-    public function update(){
+    public function update(): void
+    {
         
         $validator = new Validator();
         $validator->addPasswordToCompare('passwordConfirm');
@@ -127,7 +132,8 @@ class RegisterController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function deleteUserById($id) {
+    public function deleteUserById($id): void
+    {
         
         if(!(int) $id[0]){
             throw new NaNException();
@@ -142,7 +148,7 @@ class RegisterController extends Controller
     /**
      * http_method=post
      */
-    public function login()
+    public function login(): void
     {
         $validator = new Validator();
         $validator->addPasswordToCompare('passwordConfirm');
@@ -166,7 +172,7 @@ class RegisterController extends Controller
         
         $stmt = $this->app->load('auth')->login($datas['email'], $datas['password']);
         if($this->app->load('auth')->login($datas['email'], $datas['password'])){
-            header("Location: /admin");
+            header('Location: /admin');
         }
 
     }
@@ -174,7 +180,7 @@ class RegisterController extends Controller
     /**
      * http_method=get
      */
-    public function logout()
+    public function logout(): void
     {
         if($this->app->load('session')->has(Auth::UserAuthentifiedKeySession)){
             $this->app->load('session')->clear(Auth::UserAuthentifiedKeySession);

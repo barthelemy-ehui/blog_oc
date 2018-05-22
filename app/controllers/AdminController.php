@@ -8,7 +8,8 @@ class AdminController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function index() {
+    public function index(): void
+    {
         
         $articlesCount = $this->app->load('repoManager')
         ->getInstance('PostRepository')
@@ -28,7 +29,8 @@ class AdminController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function users(){
+    public function users(): void
+    {
         $users =  $this->app
             ->load('repoManager')
             ->getInstance('UserRepository')

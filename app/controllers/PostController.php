@@ -14,7 +14,8 @@ class PostController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function index(){
+    public function index(): void
+    {
         
         $posts = $this->app->load('repoManager')
             ->getInstance('PostRepository')
@@ -28,7 +29,8 @@ class PostController extends Controller
     /**
      * http_method=get
      */
-    public function indexWithPagination($pagination){
+    public function indexWithPagination($pagination): void
+    {
     
     
         $limit = (int) $pagination['limit'];
@@ -66,7 +68,8 @@ class PostController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function add(){
+    public function add(): void
+    {
         
         $errors = [];
         $session = $this->app->load('session');
@@ -85,7 +88,8 @@ class PostController extends Controller
      * http_method=post
      * auth=admin
      */
-    public function store(){
+    public function store(): void
+    {
         
         $validator = new Validator();
         $validator->addRule([
@@ -124,7 +128,8 @@ class PostController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function edit($id){
+    public function edit($id): void
+    {
     
         if(!(int) $id[0]){
             throw new NaNException();
@@ -152,7 +157,8 @@ class PostController extends Controller
      * http_method=post
      * auth=admin
      */
-    public function update() {
+    public function update(): void
+    {
         
         $validator = new Validator();
         $validator->addRule([
@@ -184,7 +190,8 @@ class PostController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function delete($id){
+    public function delete($id): void
+    {
     
         if(!(int) $id[0]){
             throw new NaNException();
@@ -200,7 +207,8 @@ class PostController extends Controller
     /**
      *http_method=get
      */
-    public function getPostBySlug($postSlug) {
+    public function getPostBySlug($postSlug): void
+    {
     
         $errors = [];
         $session = $this->app->load('session');
@@ -234,15 +242,6 @@ class PostController extends Controller
             'author' => $author,
             'isSent' => $isSent,
         ]);
-    }
-    
-    public function getPostById($id) {
-        
-        $post =  $this->app->load('repoManager')
-            ->getInstance('PostRepository')
-            ->getById($id);
-        
-        // todo: si je souhaite voir l'article complet avec les commentaires, à faire en dernier s'il n'ya pas d'urgence
     }
     
 }

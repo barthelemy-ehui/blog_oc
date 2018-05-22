@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once "../vendor/autoload.php";
+require_once '../vendor/autoload.php';
 
 use App\App;
 use App\Auths\Session;
@@ -70,4 +70,9 @@ $route->all('/admin/posts', 'PostController');
 $route->all('/admin/comments', 'CommentController');
 
 
-$route->run();
+try {
+    $route->run();
+} catch (\App\exceptions\RequestUriException $e) {
+    
+    die('Message: ' . $e->getMessage());
+}

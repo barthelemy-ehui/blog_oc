@@ -15,17 +15,18 @@ class Session
         ]);
     }
     
-    public function set($sessionName, $sessionValue) {
+    public function set($sessionName, $sessionValue): void
+    {
         $_SESSION[$sessionName] = serialize($sessionValue);
     }
     
-    public function has($sessionName) {
+    public function has($sessionName): bool
+    {
         return isset($_SESSION[$sessionName]);
     }
     
-    public function clear($sessionName) {
-        
-        // todo: ajouter session_destroy()
+    public function clear($sessionName): void
+    {
         unset($_SESSION[$sessionName]);
     }
 }

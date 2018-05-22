@@ -10,7 +10,8 @@ class CommentController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function index() {
+    public function index(): void
+    {
         
         $comments = $this->app->load('repoManager')
             ->getInstance('CommentRepository')
@@ -24,7 +25,8 @@ class CommentController extends Controller
     /**
      * http_method=post
      */
-    public function store(){
+    public function store(): void
+    {
         
         $validator = new Validator();
         $validator->addRule([
@@ -46,7 +48,6 @@ class CommentController extends Controller
             return;
         }
 
-        // only need slug for the redirection
         $slug = $data['slug'];
         unset($data['slug']);
         
@@ -74,7 +75,8 @@ class CommentController extends Controller
      * http_method=post
      * auth=admin
      */
-    public function update(){
+    public function update(): void
+    {
         
         $data['status'] = $_POST['status'];
         $data['id'] = $_POST['id'];

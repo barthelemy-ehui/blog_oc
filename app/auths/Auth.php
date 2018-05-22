@@ -1,6 +1,7 @@
 <?php
 namespace App\Auths;
 
+use App\Exceptions\UserNotFoundException;
 use App\Repositories\UserRepository;
 
 class Auth
@@ -15,7 +16,7 @@ class Auth
      */
     private $userRepository;
     
-    const UserAuthentifiedKeySession = 'user';
+    public const UserAuthentifiedKeySession = 'user';
     
     public function __construct(Session $session, UserRepository $userRepository)
     {
@@ -23,7 +24,7 @@ class Auth
         $this->userRepository = $userRepository;
     }
     
-    public function register($data)
+    public function register($data): bool
     {
         if(!$this->userRepository->verifyUserEmail($data['email'])) {
             $user = $this->userRepository->insertNewUser($data);
@@ -33,32 +34,34 @@ class Auth
         return false;
     }
     
-    private function setSession($user){
+    private function setSession($user): void
+    {
         $this->session->set(self::UserAuthentifiedKeySession, $user);
     }
     
     public function check($email, $password)
     {
-        if($user = $this->userRepository->verifyUserCredential($email, $password)) {
-            $this->setSession($user);
-            return $user;
+        try {
+            if ($user = $this->userRepository->verifyUserCredential($email, $password)) {
+                $this->setSession($user);
+                return $user;
+            }
+        } catch (UserNotFoundException $e) {
+            die('L\'utilisateur introuvable');
         }
         return null;
     }
     
-    public function login($email, $password){
+    public function login($email, $password): bool
+    {
         if($user = $this->check($email, $password)){
             return true;
         }
         return false;
     }
     
-    public function logout(){
-        $this->session->clear(self::UserAuthentifiedKeySession);
-    }
-    
-    public function IsRole($role)
+    public function logout(): void
     {
-        
+        $this->session->clear(self::UserAuthentifiedKeySession);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Repositories;
 
 use App\Models\User;
@@ -12,9 +11,8 @@ class UserRepository extends Repository implements IRepository
     public function getAll()
     {
         $sqlStmt = 'SELECT * FROM users';
-        $stmt = $this->pdo->prepare($sqlStmt);
-        $stmt->execute();
-         return $stmt->fetchAll(PDO::FETCH_CLASS,User::class);
+        $stmt = $this->pdo->query($sqlStmt);
+        return $stmt->fetchAll(PDO::FETCH_CLASS,User::class);
     }
     
     public function verifyUserCredential($email, $password)
@@ -99,8 +97,6 @@ BEGIN;
 BEGIN;
 
         $stmt = $this->pdo->prepare($sqlStmt);
-        $user = $stmt->execute($data);
-
-        return $user;
+        return $stmt->execute($data);
     }
 }

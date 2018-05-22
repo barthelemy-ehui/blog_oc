@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories;
 
-
 use App\Models\Post;
 
 class PostRepository extends Repository implements IRepository
@@ -10,8 +9,7 @@ class PostRepository extends Repository implements IRepository
     public function getAll()
     {
         $sqlStmt = 'SELECT * FROM posts';
-        $stmt = $this->pdo->prepare($sqlStmt);
-        $stmt->execute();
+        $stmt = $this->pdo->query($sqlStmt);
         return $stmt->fetchAll(
             \PDO::FETCH_CLASS,
             Post::class
@@ -87,9 +85,7 @@ class PostRepository extends Repository implements IRepository
 BEGIN;
     
         $stmt = $this->pdo->prepare($sqlStmt);
-        $post = $stmt->execute($data);
-        
-        return $post;
+        return $stmt->execute($data);
     }
     
     public function insertNewPost($data) {
@@ -121,15 +117,14 @@ BEGIN;
         ]);
     }
     
-    function getCount(){
+    public function getCount(){
         $sqlStmt = 'SELECT count(*) FROM posts';
-        $stmt = $this->pdo->prepare($sqlStmt);
-        $stmt->execute();
+        $stmt = $this->pdo->query($sqlStmt);
     
         return $stmt->fetch(\PDO::FETCH_NUM)[0];
     }
     
-    function getTheTreeLatestPosts(){
+    public function getTheTreeLatestPosts(){
         
         $sqlStmt = 'SELECT * FROM posts WHERE status = :status AND publish_at<=NOW() ORDER BY update_at DESC LIMIT :limit';
         $stmt = $this->pdo->prepare($sqlStmt);
