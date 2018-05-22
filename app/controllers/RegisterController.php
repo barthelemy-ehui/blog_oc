@@ -13,39 +13,46 @@ class RegisterController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function index() {
+    public function index(): void
+    {
         echo $this->app->load('twig')->render('admin/auth/register.twig');
     }
     
     /**
      * http_method=get
      */
-    public function connect() {
+    public function connect(): void
+    {
         echo $this->app->load('twig')->render('admin/auth/connect.twig');
     }
     
     /**
      * http_method=post
      */
-    public function store() {
+    public function store(): void
+    {
 
         $validator = new Validator();
         $validator->addPasswordToCompare('passwordConfirm');
-        $validator->addRule([
+        $validator->addRule(
+            [
             'firstname' => Validator::REQUIRED,
             'lastname' => Validator::REQUIRED,
             'email' => Validator::REQUIRED_EMAIL,
             'password' => Validator::REQUIRED_PASSWORD_COMPARE
-        ]);
+            ]
+        );
         
         $data = $validator->validate();
         $errors = $validator->getErrors();
-        if($errors['errors'] && $errors['datas']){
-           echo $this->app->load('twig')->render('admin/auth/register.twig',[
-               'errors' => $errors['errors'],
-               'datas' => $errors['datas']
-           ]);
-           return;
+        if($errors['errors'] && $errors['datas']) {
+            echo $this->app->load('twig')->render(
+                'admin/auth/register.twig', [
+                'errors' => $errors['errors'],
+                'datas' => $errors['datas']
+                ]
+            );
+            return;
         }
     
         $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
@@ -62,10 +69,11 @@ class RegisterController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function edit($id){
+    public function edit($id): void
+    {
         
         if(!(int) $id[0]) {
-           throw new NaNException();
+            throw new NaNException();
         }
         
         $errors = [];
@@ -80,34 +88,39 @@ class RegisterController extends Controller
             ->getById($id[0]);
         
         
-        echo $this->app->load('twig')->render('admin/user/edit.twig',[
+        echo $this->app->load('twig')->render(
+            'admin/user/edit.twig', [
             'user' => $user,
             'User' => User::class,
             'errors' => $errors
-        ]);
+            ]
+        );
     }
     
     /**
      * http_method=post
      * auth=admin
      */
-    public function update(){
+    public function update(): void
+    {
         
         $validator = new Validator();
         $validator->addPasswordToCompare('passwordConfirm');
-        $validator->addRule([
+        $validator->addRule(
+            [
             'firstname' => Validator::REQUIRED,
             'lastname' => Validator::REQUIRED,
             'email' => Validator::REQUIRED_EMAIL,
             'password' => Validator::REQUIRED_PASSWORD_COMPARE,
             'id' => Validator::REQUIRED
-        ]);
+            ]
+        );
     
     
         $data = $validator->validate();
         $errors = $validator->getErrors();
         
-        if($errors['errors'] && $errors['datas']){
+        if($errors['errors'] && $errors['datas']) {
             $this->app->load('session')->set(Validator::class, $errors);
             $this->redirect('/admin/register/edit/' . $errors['datas']['id']);
             return;
@@ -127,46 +140,51 @@ class RegisterController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function deleteUserById($id) {
+    public function deleteUserById($id): void
+    {
         
-        if(!(int) $id[0]){
+        if(!(int) $id[0]) {
             throw new NaNException();
         }
     
-       $this->app->load('repoManager')
-           ->getInstance('UserRepository')
-           ->deleteUserById($id[0]);
-       $this->redirect('/admin/users');
+        $this->app->load('repoManager')
+            ->getInstance('UserRepository')
+            ->deleteUserById($id[0]);
+        $this->redirect('/admin/users');
     }
     
     /**
      * http_method=post
      */
-    public function login()
+    public function login(): void
     {
         $validator = new Validator();
         $validator->addPasswordToCompare('passwordConfirm');
-        $validator->addRule([
+        $validator->addRule(
+            [
 
             'email' => Validator::REQUIRED_EMAIL,
             'password' => Validator::REQUIRED
-        ]);
+            ]
+        );
     
         $datas = $validator->validate();
         $errors = $validator->getErrors();
         
 
-        if(count($errors['errors'])){
-            echo $this->app->load('twig')->render('admin/auth/connect.twig',[
+        if(count($errors['errors'])) {
+            echo $this->app->load('twig')->render(
+                'admin/auth/connect.twig', [
                 'datas' => $errors['datas'],
                 'errors' => $errors['errors']
-            ]);
+                ]
+            );
             return;
         }
         
         $stmt = $this->app->load('auth')->login($datas['email'], $datas['password']);
-        if($this->app->load('auth')->login($datas['email'], $datas['password'])){
-            header("Location: /admin");
+        if($this->app->load('auth')->login($datas['email'], $datas['password'])) {
+            header('Location: /admin');
         }
         
         echo 'something wrong either with you username or your password';
@@ -176,7 +194,7 @@ class RegisterController extends Controller
     /**
      * http_method=get
      */
-    public function logout()
+    public function logout(): void
     {
         if($this->app->load('session')->has(Auth::USERAUTHENTIFIEDKEYSESSION)){
             $this->app->load('session')->clear(Auth::USERAUTHENTIFIEDKEYSESSION);

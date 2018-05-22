@@ -1,7 +1,6 @@
 <?php
 namespace App\Models;
 
-
 class Comment extends Model
 {
     protected $title;
@@ -10,18 +9,18 @@ class Comment extends Model
     protected $email;
     protected $post_id;
     
-    const PENDING = 'pending';
-    const PUBLISHED = 'published';
-    const REFUSED = 'refused';
+    public const PENDING = 'pending';
+    public const PUBLISHED = 'published';
+    public const REFUSED = 'refused';
     
-    const TITLE = 'title';
-    const CONTENT = 'content';
+    public const TITLE = 'title';
+    public const CONTENT = 'content';
     
-    const STATUS = 'status';
+    public const STATUS = 'status';
     
-    const POST_ID = 'post_id';
+    public const POST_ID = 'post_id';
     
-    const IS_SENT = 'isSent';
+    public const IS_SENT = 'isSent';
     
     /**
      * @return mixed
