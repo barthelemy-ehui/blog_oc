@@ -9,7 +9,7 @@ final class RouteSingleton
     
     public static function getInstance(App $app)
     {
-        if(null === static::$instance){
+        if(null === static::$instance) {
             static::$instance = new Route($app);
         }
         

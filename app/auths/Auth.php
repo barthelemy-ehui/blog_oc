@@ -54,7 +54,7 @@ class Auth
     
     public function login($email, $password): bool
     {
-        if($user = $this->check($email, $password)){
+        if($user = $this->check($email, $password)) {
             return true;
         }
         return false;

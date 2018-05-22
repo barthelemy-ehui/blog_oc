@@ -10,7 +10,8 @@ class RepositoryManager
         $this->instances = $instances;
     }
     
-    public function getInstance($instanceName) {
+    public function getInstance($instanceName) 
+    {
         return $this->instances[$instanceName];
     }
 }

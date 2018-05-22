@@ -15,9 +15,11 @@ use App\Repositories\PostRepository;
 use App\Repositories\CommentRepository;
 
 $loader = new Twig_Loader_Filesystem('../app/views');
-$twig = new Twig_Environment($loader, array(
+$twig = new Twig_Environment(
+    $loader, array(
     //'cache' => '../cache',
-));
+    )
+);
 
 $twig->addExtension(new Twig_Extensions_Extension_Text());
 
@@ -28,37 +30,43 @@ $postRepository = new PostRepository($pdo);
 $commentRepository = new CommentRepository($pdo);
 
 $repoManager = new RepositoryManager();
-$repoManager->add([
+$repoManager->add(
+    [
     'UserRepository' => $userRepository,
     'PostRepository' => $postRepository,
     'CommentRepository' => $commentRepository
-]);
+    ]
+);
 
 $app = new App();
 
-$app->add([
+$app->add(
+    [
     'twig'=>$twig,
     'repoManager'=>$repoManager,
     'session' => $session,
     'auth' => new Auth($session, $userRepository),
-]);
+    ]
+);
 
-/** @var Route $route */
+/**
+ * @var Route $route 
+*/
 $route = RouteSingleton::getInstance($app);
-$twig->addGlobal('route',$route);
+$twig->addGlobal('route', $route);
 
-if($session->has(Auth::UserAuthentifiedKeySession)){
-    $twig->addGlobal('user',$session->get(Auth::UserAuthentifiedKeySession));
+if($session->has(Auth::UserAuthentifiedKeySession)) {
+    $twig->addGlobal('user', $session->get(Auth::UserAuthentifiedKeySession));
 }
 
 /**
  * front-end route
  */
 $route->get('/', 'HomeController::index');
-$route->get('/blog/{offset}/{limit}','PostController::indexWithPagination');
-$route->get('/post/{slug}','PostController::getPostBySlug');
+$route->get('/blog/{offset}/{limit}', 'PostController::indexWithPagination');
+$route->get('/post/{slug}', 'PostController::getPostBySlug');
 $route->post('/comment/store', 'CommentController::store');
-$route->post('/send/email','EmailController::send');
+$route->post('/send/email', 'EmailController::send');
 
 /**
  * Admin route

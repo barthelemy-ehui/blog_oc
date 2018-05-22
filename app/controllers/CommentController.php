@@ -17,9 +17,11 @@ class CommentController extends Controller
             ->getInstance('CommentRepository')
             ->getAll();
         
-        echo $this->app->load('twig')->render('admin/comment/index.twig', [
+        echo $this->app->load('twig')->render(
+            'admin/comment/index.twig', [
             'comments' => $comments
-        ]);
+            ]
+        );
     }
     
     /**
@@ -29,20 +31,22 @@ class CommentController extends Controller
     {
         
         $validator = new Validator();
-        $validator->addRule([
-           'title' => Validator::REQUIRED,
-           'content' => Validator::REQUIRED,
-           'email' => Validator::EMAIL,
-           'post_id' => Validator::REQUIRED,
-           'slug' => Validator::REQUIRED,
-        ]);
+        $validator->addRule(
+            [
+            'title' => Validator::REQUIRED,
+            'content' => Validator::REQUIRED,
+            'email' => Validator::EMAIL,
+            'post_id' => Validator::REQUIRED,
+            'slug' => Validator::REQUIRED,
+            ]
+        );
     
         $data = $validator->validate();
         $errors = $validator->getErrors();
         
         if(count($errors['errors'])>0) {
             $this->app->load('session')
-                 ->set(Validator::class, $errors);
+                ->set(Validator::class, $errors);
             
             $this->redirect('/post/' . $errors['datas']['slug']);
             return;

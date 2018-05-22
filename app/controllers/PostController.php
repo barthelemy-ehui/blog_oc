@@ -21,9 +21,11 @@ class PostController extends Controller
             ->getInstance('PostRepository')
             ->getAll();
 
-        echo $this->app->load('twig')->render('admin/post/index.twig', [
+        echo $this->app->load('twig')->render(
+            'admin/post/index.twig', [
             'posts' => $posts
-        ]);
+            ]
+        );
     }
     
     /**
@@ -57,11 +59,13 @@ class PostController extends Controller
         }
         
         
-        echo $this->app->load('twig')->render('front/post/index.twig',[
-           'posts' => $posts,
-           'paginationCounts' => $paginationCounts,
-           'offset' => $oldOffset
-        ]);
+        echo $this->app->load('twig')->render(
+            'front/post/index.twig', [
+            'posts' => $posts,
+            'paginationCounts' => $paginationCounts,
+            'offset' => $oldOffset
+            ]
+        );
     }
     
     /**
@@ -78,10 +82,12 @@ class PostController extends Controller
             $session->clear(Validator::class);
         }
         
-        echo $this->app->load('twig')->render('admin/post/add.twig',[
+        echo $this->app->load('twig')->render(
+            'admin/post/add.twig', [
             'Post' => Post::class,
             'errors' => $errors,
-        ]);
+            ]
+        );
     }
     
     /**
@@ -92,31 +98,37 @@ class PostController extends Controller
     {
         
         $validator = new Validator();
-        $validator->addRule([
+        $validator->addRule(
+            [
             'slug' => Validator::REQUIRED,
             'title' => Validator::REQUIRED,
             'description' => Validator::REQUIRED,
             'content' => Validator::REQUIRED,
             'status' => Validator::REQUIRED,
             'publish_at' => Validator::REQUIRED,
-        ]);
+            ]
+        );
         
         $data = $validator->validate();
         $errors = $validator->getErrors();
-        if(count($errors['errors'])>0){
+        if(count($errors['errors'])>0) {
             $this->app->load('session')->set(Validator::class, $errors);
             $this->redirect('/admin/posts/add');
             return;
         }
         
-        /** @var User $user */
+        /**
+ * @var User $user 
+*/
         $user = $this->app->load('session')->get(Auth::UserAuthentifiedKeySession);
         
-        $data = array_merge($data, [
+        $data = array_merge(
+            $data, [
             'author_id' => $user->getId()
-        ]);
+            ]
+        );
         
-        $data['slug'] =  str_replace(' ','-', $data['slug']);
+        $data['slug'] =  str_replace(' ', '-', $data['slug']);
         
         $this->app->load('repoManager')->getInstance('PostRepository')
             ->insertNewPost($data);
@@ -131,7 +143,7 @@ class PostController extends Controller
     public function edit($id): void
     {
     
-        if(!(int) $id[0]){
+        if(!(int) $id[0]) {
             throw new NaNException();
         }
 
@@ -146,11 +158,13 @@ class PostController extends Controller
             ->getInstance('PostRepository')
             ->getById($id[0]);
         
-        echo $this->app->load('twig')->render('admin/post/edit.twig', [
+        echo $this->app->load('twig')->render(
+            'admin/post/edit.twig', [
             'post' => $post,
             'Post' => Post::class,
             'errors' => $errors
-        ]);
+            ]
+        );
     }
     
     /**
@@ -161,7 +175,8 @@ class PostController extends Controller
     {
         
         $validator = new Validator();
-        $validator->addRule([
+        $validator->addRule(
+            [
             'slug' => Validator::REQUIRED,
             'title' => Validator::REQUIRED,
             'description' => Validator::REQUIRED,
@@ -169,11 +184,12 @@ class PostController extends Controller
             'status' => Validator::REQUIRED,
             'publish_at' => Validator::REQUIRED,
             'id' => Validator::REQUIRED
-        ]);
+            ]
+        );
         
         $data = $validator->validate();
         $errors = $validator->getErrors();
-        if( count($errors['errors'])>0 ) {
+        if(count($errors['errors'])>0 ) {
             $this->app->load('session')->set(Validator::class, $errors);
             $this->redirect('/admin/posts/edit/' . $data['id']);
             return;
@@ -193,7 +209,7 @@ class PostController extends Controller
     public function delete($id): void
     {
     
-        if(!(int) $id[0]){
+        if(!(int) $id[0]) {
             throw new NaNException();
         }
     
@@ -205,7 +221,7 @@ class PostController extends Controller
     }
     
     /**
-     *http_method=get
+     * http_method=get
      */
     public function getPostBySlug($postSlug): void
     {
@@ -218,7 +234,7 @@ class PostController extends Controller
         }
         
         $isSent = false;
-        if($session->has(Comment::IS_SENT)){
+        if($session->has(Comment::IS_SENT)) {
             $isSent = $session->get(Comment::IS_SENT);
             $session->clear(Comment::IS_SENT);
         }
@@ -235,13 +251,15 @@ class PostController extends Controller
             ->getInstance('UserRepository')
             ->getById($post->getAuthorId());
         
-        echo $this->app->load('twig')->render('front/post/detail.twig',[
+        echo $this->app->load('twig')->render(
+            'front/post/detail.twig', [
             'post' => $post,
             'comments' => $comments,
             'errors' => $errors,
             'author' => $author,
             'isSent' => $isSent,
-        ]);
+            ]
+        );
     }
     
 }

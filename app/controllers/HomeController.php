@@ -10,11 +10,13 @@ class HomeController extends Controller
     public function index(): void
     {
         $latestThreePosts = $this->app->load('repoManager')
-        ->getInstance('PostRepository')
-        ->getTheTreeLatestPosts();
+            ->getInstance('PostRepository')
+            ->getTheTreeLatestPosts();
         
-        echo $this->app->load('twig')->render('front/index.twig',[
+        echo $this->app->load('twig')->render(
+            'front/index.twig', [
             'posts' => $latestThreePosts
-        ]);
+            ]
+        );
     }
 }

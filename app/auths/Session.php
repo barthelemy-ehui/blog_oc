@@ -6,13 +6,16 @@ use App\Models\User;
 class Session
 {
     
-    public function get($sessionName) {
+    public function get($sessionName) 
+    {
         $class = $_SESSION[$sessionName];
-        return unserialize($class, [
+        return unserialize(
+            $class, [
             'allowed_classes'=> [
                 User::class
             ]
-        ]);
+            ]
+        );
     }
     
     public function set($sessionName, $sessionValue): void

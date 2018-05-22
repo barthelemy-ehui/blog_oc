@@ -12,17 +12,19 @@ class AdminController extends Controller
     {
         
         $articlesCount = $this->app->load('repoManager')
-        ->getInstance('PostRepository')
-        ->getCount();
+            ->getInstance('PostRepository')
+            ->getCount();
         
         $commentsCount = $this->app->load('repoManager')
-        ->getInstance('CommentRepository')
-        ->getCount();
+            ->getInstance('CommentRepository')
+            ->getCount();
         
-        echo $this->app->load('twig')->render('admin/index.twig',[
+        echo $this->app->load('twig')->render(
+            'admin/index.twig', [
             'commentsCount' => $commentsCount,
             'articlesCount' => $articlesCount
-        ]);
+            ]
+        );
     }
     
     /**
@@ -36,8 +38,10 @@ class AdminController extends Controller
             ->getInstance('UserRepository')
             ->getAll();
         
-        echo $this->app->load('twig')->render('admin/user/index.twig',[
+        echo $this->app->load('twig')->render(
+            'admin/user/index.twig', [
             'users' => $users
-        ]);
+            ]
+        );
     }
 }
