@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories;
 
-
 use App\models\Comment;
 use App\Models\Post;
 
@@ -33,8 +32,8 @@ BEGIN;
         $stmt->execute();
         
         return $stmt->fetchAll(
-          \PDO::FETCH_CLASS,
-          Comment::class
+            \PDO::FETCH_CLASS,
+            Comment::class
         );
     }
     
@@ -42,9 +41,11 @@ BEGIN;
     {
         $sqlStmt = 'SELECT * FROM comments WHERE id = :id';
         $stmt = $this->pdo->prepare($sqlStmt);
-        $stmt->execute([
-           ':id' => $id
-        ]);
+        $stmt->execute(
+            [
+            ':id' => $id
+            ]
+        );
         
         return $stmt->fetchObject(Comment::class);
     }
@@ -53,10 +54,12 @@ BEGIN;
     {
         $sqlStmt = 'SELECT * FROM comments WHERE post_id = :post_id AND status = :status';
         $stmt = $this->pdo->prepare($sqlStmt);
-        $stmt->execute([
+        $stmt->execute(
+            [
             ':post_id' => $postId,
             ':status' => Comment::PUBLISHED
-        ]);
+            ]
+        );
         
         return $stmt->fetchAll(
             \PDO::FETCH_CLASS,
@@ -64,10 +67,13 @@ BEGIN;
         );
     }
     
-    public function updateComment($data){
-        $data = array_merge($data, [
-           'update_at' => (new \DateTime('now'))->format('Y-m-d H:i:s')
-        ]);
+    public function updateComment($data)
+    {
+        $data = array_merge(
+            $data, [
+            'update_at' => (new \DateTime('now'))->format('Y-m-d H:i:s')
+            ]
+        );
     
         $sqlStmt = <<<BEGIN
             UPDATE comments SET
@@ -77,17 +83,18 @@ BEGIN;
 BEGIN;
         
             $stmt = $this->pdo->prepare($sqlStmt);
-            $comment = $stmt->execute($data);
-            
-            return $comment;
+        return $stmt->execute($data);
     }
     
-    public function insertNewComment($data) {
+    public function insertNewComment($data) 
+    {
             
-            $data = array_merge($data, [
+            $data = array_merge(
+                $data, [
                 'create_at' => (new \DateTime('now'))->format('Y-m-d H:i:s'),
                 'status' => Comment::PENDING
-            ]);
+                ]
+            );
             
             $sqlStmt = <<<BEGIN
                 INSERT INTO comments
@@ -115,19 +122,23 @@ BEGIN;
             return $this->getById($this->pdo->lastInsertId());
     }
     
-    public function deleteCommentById($id){
+    public function deleteCommentById($id)
+    {
             $sqlStmt = <<<BEGIN
                 DELETE FROM comments
                 WHERE id = :id
 BEGIN;
 
             $stmt = $this->pdo->prepare($sqlStmt);
-            $stmt->execute([
-               ':id' => $id
-            ]);
+            $stmt->execute(
+                [
+                ':id' => $id
+                ]
+            );
     }
     
-    function getCount(){
+    function getCount()
+    {
         $sqlStmt = 'SELECT count(*) FROM comments';
         $stmt = $this->pdo->prepare($sqlStmt);
         $stmt->execute();

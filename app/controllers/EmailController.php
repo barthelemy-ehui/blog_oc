@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class EmailController extends Controller
 {
-    public function send()
+    public function send(): void
     {
         $name = $_POST['name'];
         $email = $_POST['email'];

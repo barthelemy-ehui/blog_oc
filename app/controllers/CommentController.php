@@ -10,43 +10,48 @@ class CommentController extends Controller
      * http_method=get
      * auth=admin
      */
-    public function index() {
+    public function index(): void
+    {
         
         $comments = $this->app->load('repoManager')
             ->getInstance('CommentRepository')
             ->getAll();
         
-        echo $this->app->load('twig')->render('admin/comment/index.twig', [
+        echo $this->app->load('twig')->render(
+            'admin/comment/index.twig', [
             'comments' => $comments
-        ]);
+            ]
+        );
     }
     
     /**
      * http_method=post
      */
-    public function store(){
+    public function store(): void
+    {
         
         $validator = new Validator();
-        $validator->addRule([
-           'title' => Validator::REQUIRED,
-           'content' => Validator::REQUIRED,
-           'email' => Validator::EMAIL,
-           'post_id' => Validator::REQUIRED,
-           'slug' => Validator::REQUIRED,
-        ]);
+        $validator->addRule(
+            [
+            'title' => Validator::REQUIRED,
+            'content' => Validator::REQUIRED,
+            'email' => Validator::EMAIL,
+            'post_id' => Validator::REQUIRED,
+            'slug' => Validator::REQUIRED,
+            ]
+        );
     
         $data = $validator->validate();
         $errors = $validator->getErrors();
         
         if(count($errors['errors'])>0) {
             $this->app->load('session')
-                 ->set(Validator::class, $errors);
+                ->set(Validator::class, $errors);
             
             $this->redirect('/post/' . $errors['datas']['slug']);
             return;
         }
 
-        // only need slug for the redirection
         $slug = $data['slug'];
         unset($data['slug']);
         
@@ -74,7 +79,8 @@ class CommentController extends Controller
      * http_method=post
      * auth=admin
      */
-    public function update(){
+    public function update(): void
+    {
         
         $data['status'] = $_POST['status'];
         $data['id'] = $_POST['id'];
