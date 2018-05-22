@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Repositories;
-
 
 abstract class Repository
 {
@@ -9,6 +7,7 @@ abstract class Repository
     
     /**
      * Repository constructor.
+     *
      * @param \Pdo $pdo
      */
     public function __construct(\Pdo $pdo)

@@ -5,10 +5,10 @@ use App\Exceptions\RuleNotFoundException;
 
 class Validator
 {
-    const REQUIRED = 'required';
-    const EMAIL = 'email';
-    const REQUIRED_EMAIL = 'required|email';
-    const REQUIRED_PASSWORD_COMPARE = 'required|compare';
+    public const REQUIRED = 'required';
+    public const EMAIL = 'email';
+    public const REQUIRED_EMAIL = 'required|email';
+    public const REQUIRED_PASSWORD_COMPARE = 'required|compare';
     
     private $secondPasswordFieldName;
     
@@ -20,9 +20,9 @@ class Validator
     
     private $userInputDatas = [];
     
-    const HTTP_POST_METHOD = 'post';
+    public const HTTP_POST_METHOD = 'post';
     
-    public function validate($type = 'post')
+    public function validate($type = 'post'): array
     {
         if($type === self::HTTP_POST_METHOD) {
             $datas = array_keys($this->rules);
@@ -31,7 +31,7 @@ class Validator
                 $validationOption = $this->getValidationsOption($rule);
                 $filter = key($validationOption);
                 $option = current($validationOption);
-                if($result = filter_input(INPUT_POST, $data, $filter, $option)){
+                if($result = filter_input(INPUT_POST, $data, $filter, $option)) {
                     $this->datas[$data] = $result;
                 }else {
                     $this->errors[$data] = $this->getErrorMessage($rule);
@@ -39,24 +39,27 @@ class Validator
             }
         }
         
-        if(count($this->errors)>0){
+        if(count($this->errors)>0) {
             $this->userInputDatas = $_POST;
         }
         return $this->datas;
     }
     
-    public function getErrors(){
+    public function getErrors(): array
+    {
         return ['errors' => $this->errors, 'datas' => $this->userInputDatas ];
     }
     
-    public function addRule($rules){
-        if(!is_array($rules)){
+    public function addRule($rules): void
+    {
+        if(!is_array($rules)) {
             throw new IsNotArrayException();
         }
         $this->rules = $rules;
     }
     
-    private function getErrorMessage($key){
+    private function getErrorMessage($key)
+    {
         $messages = [
             self::REQUIRED => 'Ce champs est requis',
             self::EMAIL => 'Email invalide',
@@ -66,37 +69,38 @@ class Validator
         return $messages[$key];
     }
     
-    private function getValidationsOption($ruleName)
+    private function getValidationsOption($ruleName): array
     {
         $rulesOptions = [];
             switch($ruleName){
-                case self::REQUIRED:
-                    $rulesOptions[FILTER_VALIDATE_REGEXP] = [
-                        'options' => ['regexp' => '/\w/']
-                    ];
-                    break;
-                case self::EMAIL:
-                    $rulesOptions[FILTER_VALIDATE_EMAIL] = [];
-                    break;
-                case self::REQUIRED_EMAIL:
-                    $rulesOptions[FILTER_VALIDATE_REGEXP] = [
-                        'options' => ['regexp' => '/\w/'],
-                        'filter' => FILTER_VALIDATE_EMAIL,
-                    ];
-                    break;
-                case self::REQUIRED_PASSWORD_COMPARE:
-                    $rulesOptions[FILTER_CALLBACK] = [
-                        'options' => 'self::comparePassword',
-                    ];
-                    break;
-                default:
-                    throw new RuleNotFoundException();
+        case self::REQUIRED:
+            $rulesOptions[FILTER_VALIDATE_REGEXP] = [
+                'options' => ['regexp' => '/\w/']
+            ];
+            break;
+        case self::EMAIL:
+            $rulesOptions[FILTER_VALIDATE_EMAIL] = [];
+            break;
+        case self::REQUIRED_EMAIL:
+            $rulesOptions[FILTER_VALIDATE_REGEXP] = [
+                'options' => ['regexp' => '/\w/'],
+                'filter' => FILTER_VALIDATE_EMAIL,
+            ];
+            break;
+        case self::REQUIRED_PASSWORD_COMPARE:
+            $rulesOptions[FILTER_CALLBACK] = [
+                'options' => 'self::comparePassword',
+            ];
+            break;
+        default:
+            throw new RuleNotFoundException();
             }
 
-        return $rulesOptions;
+            return $rulesOptions;
     }
     
-    public function addPasswordToCompare($fieldName) {
+    public function addPasswordToCompare($fieldName): void
+    {
         $this->secondPasswordFieldName = $fieldName;
     }
     
@@ -104,7 +108,7 @@ class Validator
     {
         $secondPassword = $_POST[$this->secondPasswordFieldName];
         $isNotEmpty = !empty($password) && !empty($secondPassword);
-        if($isNotEmpty && strcmp($password, $secondPassword) === 0){
+        if($isNotEmpty && strcmp($password, $secondPassword) === 0) {
             return $password;
         }
         return false;

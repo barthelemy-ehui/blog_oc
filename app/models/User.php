@@ -7,43 +7,58 @@ class User extends Model
     protected $lastname;
     protected $email;
     protected $password;
-    protected $created_at;
+    protected $create_at;
     protected $update_at;
     
-    public function nameMaj(){
+    public const FIRSTNAME = 'firstname';
+    public const LASTNAME = 'lastname';
+    public const EMAIL = 'email';
+    public const PASSWORD = 'password';
+    public const PASSWORDCONFIRM = 'passwordConfirm';
+    
+    public function nameMaj()
+    {
         return strtoupper($this->firstname);
     }
     
-    /**
-     * @return mixed
-     */
     public function getFirstname()
     {
         return $this->firstname;
     }
     
-    /**
-     * @return mixed
-     */
     public function getLastname()
     {
         return $this->lastname;
     }
     
-    /**
-     * @return mixed
-     */
     public function getEmail()
     {
         return $this->email;
     }
     
-    /**
-     * @return mixed
-     */
     public function getPassword()
     {
         return $this->password;
+    }
+    
+    public function getCreateAt()
+    {
+        return $this->create_at;
+    }
+    
+    public function setCreateAt($create_at): void
+    {
+        $this->create_at = $create_at;
+    }
+    
+    public function getUpdateAt()
+    {
+        return $this->update_at;
+    }
+    
+    public function setUpdateAt($update_at): void
+    {
+        $this->update_at = $update_at;
     }
     
 }

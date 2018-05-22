@@ -1,11 +1,5 @@
 <?php
-
 namespace App\Controllers;
-
-
-use App\App;
-use App\Models\User;
-use App\Auths\Auth;
 
 class HomeController extends Controller
 {
@@ -13,8 +7,16 @@ class HomeController extends Controller
     /**
      * http_method=get
      */
-    public function index()
+    public function index(): void
     {
-        echo $this->app->load('twig')->render('front/index.twig');
+        $latestThreePosts = $this->app->load('repoManager')
+            ->getInstance('PostRepository')
+            ->getTheTreeLatestPosts();
+        
+        echo $this->app->load('twig')->render(
+            'front/index.twig', [
+            'posts' => $latestThreePosts
+            ]
+        );
     }
 }

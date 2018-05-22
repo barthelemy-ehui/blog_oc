@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>SB Admin - Start Bootstrap Template</title>
+    <title>Admin</title>
     <!-- Bootstrap core CSS-->
     <link href="/assets/admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom fonts for this template-->
     <link href="/assets/admin/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- Page level plugin CSS-->
     <link href="/assets/admin/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+    <link href="/assets/admin/css/summernote-bs4.css" rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="/assets/admin/css/sb-admin.css" rel="stylesheet">
 </head>
@@ -22,7 +23,7 @@
 {% block navigation %}
 <div class="content-wrapper">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-        <a class="navbar-brand" href="index.html">Blog</a>
+        <a class="navbar-brand" href="index.html">Blog</a><span class="text-white">Vous êtes connecté en tant que: {{ user.firstname }}</span>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -77,6 +78,7 @@
 {% endblock %}
 {% block content %}{% endblock %}
 
+</div>
 <!-- Bootstrap core JavaScript-->
 <script src="/assets/admin/vendor/jquery/jquery.min.js"></script>
 <script src="/assets/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -86,11 +88,12 @@
 <script src="/assets/admin/vendor/chart.js/Chart.min.js"></script>
 <script src="/assets/admin/vendor/datatables/jquery.dataTables.js"></script>
 <script src="/assets/admin/vendor/datatables/dataTables.bootstrap4.js"></script>
+<script src="/assets/admin/js/summernote-bs4.js"></script>
 <!-- Custom scripts for all pages-->
 <script src="/assets/admin/js/sb-admin.min.js"></script>
+<script src="/assets/admin/js/admin.js"></script>
 <!-- Custom scripts for this page-->
 <script src="/assets/admin/js/sb-admin-datatables.min.js"></script>
-<script src="/assets/admin/js/sb-admin-charts.min.js"></script>
 
 </body>
 </html>

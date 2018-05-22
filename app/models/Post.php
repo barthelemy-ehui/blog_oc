@@ -11,131 +11,87 @@ class Post extends Model
     protected $author_id;
     protected $publish_at;
     
-    const PENDING = 'pending';
-    const PUBLISHED = 'published';
+    public const PENDING = 'pending';
+    public const PUBLISHED = 'published';
     
-    const SLUG = 'slug';
-    const TITLE = 'title';
-    const DESCRIPTION = 'description';
-    const CONTENT = 'content';
+    public const SLUG = 'slug';
+    public const TITLE = 'title';
+    public const DESCRIPTION = 'description';
+    public const CONTENT = 'content';
     
-    const STATUS = [
-        self::PENDING,
-        self::PUBLISHED
-    ];
+    public const STATUS = 'status';
     
-    const AUTHOR_ID = 'author_id';
-    const PUBLISH_AT = 'publish_at';
+    public const AUTHOR_ID = 'author_id';
+    public const PUBLISH_AT = 'publish_at';
     
-    /**
-     * @return mixed
-     */
     public function getSlug()
     {
         return $this->slug;
     }
     
-    /**
-     * @param mixed $slug
-     */
     public function setSlug($slug): void
     {
         $this->slug = $slug;
     }
     
-    /**
-     * @return mixed
-     */
     public function getTitle()
     {
         return $this->title;
     }
     
-    /**
-     * @param mixed $title
-     */
     public function setTitle($title): void
     {
         $this->title = $title;
     }
     
-    /**
-     * @return mixed
-     */
     public function getDescription()
     {
         return $this->description;
     }
     
-    /**
-     * @param mixed $description
-     */
     public function setDescription($description): void
     {
         $this->description = $description;
     }
     
-    /**
-     * @return mixed
-     */
     public function getContent()
     {
         return $this->content;
     }
     
-    /**
-     * @param mixed $content
-     */
     public function setContent($content): void
     {
         $this->content = $content;
     }
     
-    /**
-     * @return mixed
-     */
     public function getStatus()
     {
         return $this->status;
     }
     
-    /**
-     * @param mixed $status
-     */
     public function setStatus($status): void
     {
         $this->status = $status;
     }
     
-    /**
-     * @return mixed
-     */
     public function getAuthorId()
     {
         return $this->author_id;
     }
     
-    /**
-     * @param mixed $author_id
-     */
     public function setAuthorId($author_id): void
     {
         $this->author_id = $author_id;
     }
     
-    /**
-     * @return mixed
-     */
-    public function getPublishedAt()
+    public function getPublishAt()
     {
-        return $this->published_at;
+        return $this->publish_at;
     }
     
-    /**
-     * @param mixed $published_at
-     */
-    public function setPublishedAt($published_at): void
+    public function setPublishAt($publish_at): void
     {
-        $this->published_at = $published_at;
+        $this->publish_at = $publish_at;
     }
+    
 }

@@ -30,8 +30,8 @@
                         <td> {{ user.lastname }}</td>
                         <td> {{ user.email }}</td>
                         <td>
-                            <a class="btn btn-light" href="#{{ user.id }}"><s>Modifier</s></a>
-                            <a class="btn btn-danger" href="#{{ user.id }}"><s>Supprimer</s></a>
+                                <a href="/admin/register/edit/{{ user.id }}" class="btn btn-light">Modifier</a>
+                                <a href="/admin/register/deleteUserById/{{ user.id }}" class="btn btn-danger">Supprimer</a>
                         </td>
                     </tr>
                 {% endfor %}
