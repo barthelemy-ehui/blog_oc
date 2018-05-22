@@ -25,8 +25,6 @@ class Route
     
     private $stacksOfUrls = [];
 
-    private $currentUri;
-    
     private $app;
     
     
@@ -49,9 +47,9 @@ class Route
         if ($this->checkPathInfo($uri, static::GET_METHOD)) {
             $urlData = $this->fetchUrlData($uri);
             $this->callController($uri,$controller,$urlData);
+            return;
         }
-        $this->currentUri = $uri;
-        return $this;
+        $this->returnErrorPage();
     }
     
     public function post($uri, $controller) {
@@ -65,9 +63,10 @@ class Route
     {
         if ($this->checkPathInfo($uri, static::POST_METHOD)) {
             $this->callController($uri, $controller);
+            return;
         }
-        $this->currentUri = $uri;
-        return $this;
+        
+        $this->returnErrorPage();
     }
 
     public function all($uri, $controllerName) {
@@ -90,8 +89,6 @@ class Route
         },$methods);
         
         if(!in_array($methodName = $this->getUserClientMethod($uri),$methods)){
-            //todo: remove it later on
-            //throw new UnrecognizeMethodException();
             return $this;
         }
         
@@ -106,9 +103,9 @@ class Route
             } else {
                 (new $controller($this->app))->$methodName();
             }
-            $this->currentUri = $uri;
+            return;
         }
-        return $this;
+        $this->returnErrorPage();
     }
     
     private function checkPathInfo($routeUrl, $http_method)
@@ -171,11 +168,6 @@ class Route
         return $uriNameWithValue;
     }
     
-    public function setName($routeName)
-    {
-        $this->stacksOfUrls[$routeName] = $this->currentUri;
-    }
-    
     public function generateRouteUrl($routeName, $values = [], $method = '') {
         $uri = $this->stacksOfUrls[$routeName];
         if(empty($method)){
@@ -196,8 +188,6 @@ class Route
         $userClientUrl = $_SERVER['REQUEST_URI'];
         $patternIndex = 0;
         if(strpos($userClientUrl, $uri) !== $patternIndex){
-            // todo: remove it later on
-            //throw new BadUrlException();
             return false;
         }
         
@@ -206,8 +196,6 @@ class Route
             $urlClient = substr_replace($userClientUrl,'',0,strlen($uri));
         }
        
-        // By convention, after stripping out the route uri part, the first index among the separator is the name of the method
-        // for instance, /home/show/123, we remove '/home' then keep '/show/123' and use show as the method of the controller
         $methodName = explode('/',$urlClient)[1];
         return strtolower($methodName);
     }
@@ -220,7 +208,6 @@ class Route
             throw new UnrecognizeHttpMethodException();
         }
     
-        //$httpMethodAsked = //strtolower(explode('=',$commentsWildcardStripOut)[1]);
         $httpMethod = '/(http_method=(post|get|delete|put))/';
         preg_match($httpMethod, $commentsWildcardStripOut,$matches);
         $httpMethodAsked = $matches[2];
@@ -244,10 +231,8 @@ class Route
         
         $urlValues = explode('/',$urlClient);
         
-        // because there is an empty value after explode, we don't need it, so we get rid of it
         array_shift($urlValues);
         
-        // we get rid of the method name
         array_shift($urlValues);
         
         return $urlValues;
@@ -308,5 +293,9 @@ class Route
         }
         array_pop($arr);
         return $this->recursive($arr, $keys);
+    }
+    
+    private function returnErrorPage() {
+        die('La page que vous cherchez n\'existe pas ou a été supprimée. Veuillez contacter l\'administrateur du site');
     }
 }
