@@ -18,6 +18,8 @@ class Auth
     
     public const USERAUTHENTIFIEDKEYSESSION = 'user';
     
+    public const USERNOTFOUND = 'UserNotFound';
+    
     public function __construct(Session $session, UserRepository $userRepository)
     {
         $this->session = $session;

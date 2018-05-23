@@ -23,7 +23,15 @@ class RegisterController extends Controller
      */
     public function connect(): void
     {
-        echo $this->app->load('twig')->render('admin/auth/connect.twig');
+        $errors = [];
+        if($this->app->load('session')->has(Auth::USERNOTFOUND)){
+            $errors[Auth::USERNOTFOUND] = $this->app->load('session')->get(Auth::USERNOTFOUND);
+            $this->app->load('session')->clear(Auth::USERNOTFOUND);
+        }
+
+        echo $this->app->load('twig')->render('admin/auth/connect.twig', [
+            'errors' => $errors
+        ]);
     }
     
     /**
@@ -162,7 +170,6 @@ class RegisterController extends Controller
         $validator->addPasswordToCompare('passwordConfirm');
         $validator->addRule(
             [
-
             'email' => Validator::REQUIRED_EMAIL,
             'password' => Validator::REQUIRED
             ]
@@ -182,9 +189,11 @@ class RegisterController extends Controller
             return;
         }
         
-        $stmt = $this->app->load('auth')->login($datas['email'], $datas['password']);
         if($this->app->load('auth')->login($datas['email'], $datas['password'])) {
-            header('Location: /admin');
+            $this->redirect('/admin');
+        } else {
+            $this->app->load('session')->set(Auth::USERNOTFOUND,'Email ou mot de passe incorrect');
+            $this->redirect('/admin/register/connect');
         }
         
         echo 'something wrong either with you username or your password';
