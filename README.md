@@ -1,12 +1,10 @@
 
 **Methods**
 
-Only 4 types of http methods are allowed inside the controller comments.
+Only 2 types of http methods are allowed inside the method comments.
 There are all compulsory when calling Route::all(urlname, controllerName), Route::get(...), Route::post(...)
 - **get**
 - **post**
-- **delete**
-- **put**
 
 The use of the http_method and auth are declared by adding comment on the class method.
 
