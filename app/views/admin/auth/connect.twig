@@ -21,6 +21,12 @@
         <div class="card card-login mx-auto mt-5">
             <div class="card-header">Login</div>
             <div class="card-body">
+
+                {% if errors['UserNotFound'] %}
+                    <div class="alert alert-danger">
+                        {{ errors['UserNotFound'] }}
+                    </div>
+                {% endif %}
                 <form action="/admin/register/login" method="post">
                     <div class="form-group">
                         <label for="email">Email</label>
