@@ -314,6 +314,6 @@ class Route
     
     private function returnErrorPage(): void
     {
-        die('La page que vous cherchez n\'existe pas ou a été supprimée. Veuillez contacter l\'administrateur du site');
+        echo $this->app->load('twig')->render('/error404.twig');
     }
 }
