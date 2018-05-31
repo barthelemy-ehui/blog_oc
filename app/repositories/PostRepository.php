@@ -3,7 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Post;
 
-class PostRepository extends Repository implements IRepository
+class PostRepository extends Repository implements IRepositoryInterface
 {
     
     public function getAll()

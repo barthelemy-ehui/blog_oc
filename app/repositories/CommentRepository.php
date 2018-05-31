@@ -4,7 +4,7 @@ namespace App\Repositories;
 use App\models\Comment;
 use App\Models\Post;
 
-class CommentRepository extends Repository implements IRepository
+class CommentRepository extends Repository implements IRepositoryInterface
 {
     
     public function getAll()
