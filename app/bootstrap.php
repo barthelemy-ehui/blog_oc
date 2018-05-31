@@ -14,7 +14,7 @@ use App\Routes\RouteSingleton;
 use App\Repositories\PostRepository;
 use App\Repositories\CommentRepository;
 
-$loader = new Twig_Loader_Filesystem('../app/views');
+$loader = new Twig_Loader_Filesystem( __DIR__. '/../app/views');
 $twig = new Twig_Environment($loader, array(
 ));
 
