@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\App;
 use App\Auths\Session;
@@ -14,7 +14,7 @@ use App\Routes\RouteSingleton;
 use App\Repositories\PostRepository;
 use App\Repositories\CommentRepository;
 
-$loader = new Twig_Loader_Filesystem('../app/views');
+$loader = new Twig_Loader_Filesystem( __DIR__. '/../app/views');
 $twig = new Twig_Environment($loader, array(
 ));
 
