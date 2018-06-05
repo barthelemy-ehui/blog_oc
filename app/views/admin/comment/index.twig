@@ -22,7 +22,16 @@
                     <th scope="row"> {{ comment.id }} </th>
                     <td> {{ comment.title }} </td>
                     <td> {{ comment.content }} </td>
-                    <td> {{ comment.status }} </td>
+                    {% set bgComment = '' %}
+                    {% if constant(Comment~'::PENDING') == comment.status %}
+                        {% set bgComment = 'bg-secondary' %}
+                    {% elseif constant(Comment~'::PUBLISHED') == comment.status %}
+                        {% set bgComment = 'bg-success' %}
+                    {% else %}
+                        {% set bgComment = 'bg-danger' %}
+                    {% endif %}
+                    <td><span class="{{ bgComment }}" style="padding: 5px;color: whitesmoke;">{{ comment.status }} </span></td>
+
                     <td>
                         <!-- à faire -->
                         <a href="/post/{{ comment.slug }}" target="_blank">Article</a>

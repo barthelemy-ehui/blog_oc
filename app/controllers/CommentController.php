@@ -19,7 +19,8 @@ class CommentController extends Controller
         
         echo $this->app->load('twig')->render(
             'admin/comment/index.twig', [
-            'comments' => $comments
+            'comments' => $comments,
+            'Comment' => Comment::class
             ]
         );
     }
