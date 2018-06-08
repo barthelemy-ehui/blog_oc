@@ -6,6 +6,7 @@ use App\Auths\Auth;
 use App\exceptions\NotLoginException;
 use App\exceptions\RequestUriException;
 use App\exceptions\UnrecognizeHttpMethodException;
+use App\Exceptions\BadUrlException;
 
 class Route
 {
