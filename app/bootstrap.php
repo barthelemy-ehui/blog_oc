@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(0);
 
 require_once __DIR__."/../vendor/autoload.php";
 
@@ -79,6 +80,8 @@ try {
     $route->run();
 } catch (\App\exceptions\RequestUriException $e) {
     echo ('Message: ' . $e->getMessage());
+} catch (\App\Exceptions\NaNException|DivisionByZeroError|ArgumentCountError|\App\Exceptions\BadUrlException $e) {
+    echo $app->load('twig')->render('/error404.twig');
 } catch(\App\Exceptions\NotLoginException $e){
     echo $app->load('twig')->render('admin/errorNotLogin.twig');
 }

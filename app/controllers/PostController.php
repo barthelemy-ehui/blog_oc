@@ -37,8 +37,8 @@ class PostController extends Controller
     
         $limit = (int) $pagination['limit'];
         $offset = (int) $pagination['offset'];
-
-        if(!$limit && !$offset) {
+    
+        if((!$limit && !$offset) || $limit === 0) {
             throw new NaNException();
         }
         
